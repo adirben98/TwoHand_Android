@@ -1,4 +1,4 @@
-package com.example.twohand_project;
+package com.example.twohand_project.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.twohand_project.Model.Post;
+import com.example.twohand_project.R;
 
 import java.util.List;
 
@@ -47,17 +48,13 @@ class FeedViewHolder extends RecyclerView.ViewHolder{
     }
 }
 
-interface OnItemClickListener{
-    void onClick(int pos);
-}
-
 public class FeedListAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     List<Post> data;
     LayoutInflater inflater;
 
     OnItemClickListener listener;
 
-    void SetItemClickListener(OnItemClickListener listener){
+    public void SetItemClickListener(OnItemClickListener listener){
         this.listener=listener;
     }
 

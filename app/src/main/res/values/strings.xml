@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">TwoHand_Project</string>
+    <array name="category_array">
+        <item>Shirt</item>
+        <item>Pants</item>
+        <item>Coat</item>
+        <item>Dress</item>
+        <item>Skirt</item>
+    </array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
+
