@@ -22,47 +22,59 @@
         <ImageView
             android:id="@+id/logo"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="80dp"
             android:layout_weight="1"
-            android:src="@drawable/logo"
-            android:scaleType="fitCenter" />
+            android:scaleType="centerInside"
+            android:src="@drawable/logo" />
 
     </LinearLayout>
 
     <Spinner
-        android:id="@+id/category_spinner"
+        android:id="@+id/cloth_kind_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        app:layout_constraintEnd_toStartOf="@id/search_view"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/search_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/color_spinner"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintWidth_percent="0.4" />
 
-    <SearchView
-        android:id="@+id/search_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <Spinner
+        android:id="@+id/color_spinner"
+        android:layout_width="154dp"
+        android:layout_height="37dp"
         android:padding="8dp"
-        android:queryHint="Search posts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/category_spinner"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintWidth_percent="0.6" />
+        app:layout_constraintEnd_toStartOf="@+id/cloth_kind_spinner"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
 
-    <GridView
-        android:id="@+id/posts_grid"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="50dp"
-        android:horizontalSpacing="8dp"
-        android:numColumns="2"
-        android:padding="8dp"
-        android:verticalSpacing="8dp"
+    <ImageButton
+        android:id="@+id/search_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:backgroundTint="#FF5722"
+        android:src="@android:drawable/ic_menu_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cloth_kind_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerList"
+        android:layout_width="409dp"
+        android:layout_height="611dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view" />
+        app:layout_constraintTop_toBottomOf="@+id/cloth_kind_spinner" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

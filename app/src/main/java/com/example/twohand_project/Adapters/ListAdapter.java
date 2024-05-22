@@ -14,7 +14,7 @@ import com.example.twohand_project.R;
 
 import java.util.List;
 
-class FeedViewHolder extends RecyclerView.ViewHolder{
+class ViewHolder extends RecyclerView.ViewHolder{
 
     TextView owner;
     ImageView ownerImg;
@@ -23,7 +23,7 @@ class FeedViewHolder extends RecyclerView.ViewHolder{
     TextView description;
     ImageView productImg;
 
-    public FeedViewHolder(@NonNull View itemView,OnItemClickListener listener) {
+    public ViewHolder(@NonNull View itemView,OnItemClickListener listener) {
         super(itemView);
         this.owner=itemView.findViewById(R.id.Username);
         this.ownerImg=itemView.findViewById(R.id.imgUser);
@@ -33,7 +33,7 @@ class FeedViewHolder extends RecyclerView.ViewHolder{
         this.productImg=itemView.findViewById(R.id.imgPost);
 
         itemView.setOnClickListener((view)->{
-            listener.onClick(getAdapterPosition());
+            listener.onClick(getBindingAdapterPosition());
         });
 
     }
@@ -48,7 +48,7 @@ class FeedViewHolder extends RecyclerView.ViewHolder{
     }
 }
 
-public class FeedListAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
     List<Post> data;
     LayoutInflater inflater;
 
@@ -59,20 +59,20 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     }
 
 
-    public FeedListAdapter(List<Post> data, LayoutInflater inflater) {
+    public ListAdapter(List<Post> data, LayoutInflater inflater) {
         this.data = data;
         this.inflater = inflater;
     }
 
     @NonNull
     @Override
-    public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.post_list_row,parent,false);
-        return new FeedViewHolder(view,listener);
+        return new ViewHolder(view,listener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post=data.get(position);
         holder.bind(post);
 
@@ -81,5 +81,11 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public void updateItems(List<Post> newItemList) {
+        data.clear();
+        data.addAll(newItemList);
+        notifyDataSetChanged();
     }
 }

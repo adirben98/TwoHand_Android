@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.twohand_project.Adapters.FeedListAdapter;
+import com.example.twohand_project.Adapters.ListAdapter;
 import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.databinding.FragmentFeedListBinding;
@@ -30,7 +30,7 @@ public class FeedListFragment extends Fragment {
 
         List<Post> data= Model.instance().getAllPosts();
         data.add(new Post("adir","","tel aviv","5$","nana",""));
-        FeedListAdapter adapter = new FeedListAdapter(data, getLayoutInflater());
+        ListAdapter adapter = new ListAdapter(data, getLayoutInflater());
         binding.RecyclerView.setAdapter(adapter);
         adapter.SetItemClickListener(pos -> {
 
