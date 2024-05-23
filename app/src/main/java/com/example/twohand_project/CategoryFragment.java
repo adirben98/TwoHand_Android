@@ -41,7 +41,7 @@ public class CategoryFragment extends Fragment {
         View view=binding.getRoot();
 
 
-        clothKindSpinner=binding.clothKindSpinner;
+        clothKindSpinner=binding.clothKind;
         clothKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -54,7 +54,7 @@ public class CategoryFragment extends Fragment {
             }
         });
 
-        binding.clothKindSpinner
+        binding.clothKind
                 .setAdapter(ColorsAndClothKindAdapters.setClothKindsSpinner(getContext()));
 
 

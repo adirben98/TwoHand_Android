@@ -5,7 +5,7 @@
     android:id="@+id/nav_graph"
 
 
-    app:startDestination="@id/feedListFragment">
+    app:startDestination="@id/sharingPostFragment">
     <fragment
         android:id="@+id/feedListFragment"
         android:name="com.example.twohand_project.FeedListFragment"
@@ -18,5 +18,18 @@
     <fragment
         android:id="@+id/postFragment"
         android:name="com.example.twohand_project.PostFragment"
-        android:label="PostFragment" />
+        android:label="PostFragment" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/sharingPostFragment"
+        android:name="com.example.twohand_project.SharingPostFragment"
+        android:label="fragment_sharing_post"
+        tools:layout="@layout/fragment_sharing_post" >
+        <action
+            android:id="@+id/action_sharingPostFragment_to_feedListFragment"
+            app:destination="@id/feedListFragment" />
+    </fragment>
 </navigation>

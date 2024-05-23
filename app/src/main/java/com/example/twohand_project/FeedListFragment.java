@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.twohand_project.Adapters.ListAdapter;
@@ -36,6 +38,8 @@ public class FeedListFragment extends Fragment {
         binding.recyclerList.setAdapter(adapter);
         adapter.SetItemClickListener(pos -> {
             Post post=data.get(pos);
+            FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
+            Navigation.findNavController(view).navigate(action);
 
 
 

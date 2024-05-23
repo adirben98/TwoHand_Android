@@ -8,7 +8,7 @@
     tools:context=".CategoryFragment">
 
     <Spinner
-        android:id="@+id/cloth_kind_spinner"
+        android:id="@+id/clothKind"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="8dp"
@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/cloth_kind_spinner"
+        app:layout_constraintEnd_toStartOf="@+id/clothKind"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -47,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/color_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/clothKind" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
