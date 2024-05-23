@@ -99,10 +99,10 @@
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#F60A0A"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:text="Sold!"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />

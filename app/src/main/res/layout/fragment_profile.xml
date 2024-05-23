@@ -7,44 +7,21 @@
     android:background="#F6C79D"
     tools:context=".ProfileFragment">
 
-    <!-- Header -->
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:background="#53f1af"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
-            android:src="@drawable/logo" />
-    </LinearLayout>
-
-    <!-- User Avatar -->
     <ImageView
         android:id="@+id/avatarImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/avatar"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="User Avatar"
         android:scaleType="centerCrop"
-        android:contentDescription="User Avatar" />
+        android:src="@drawable/avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Username -->
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
@@ -57,7 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Location -->
     <TextView
         android:id="@+id/locationTextView"
         android:layout_width="wrap_content"
@@ -69,7 +45,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Edit Button -->
     <Button
         android:id="@+id/editButton"
         android:layout_width="wrap_content"
@@ -81,7 +56,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/locationTextView" />
 
-    <!-- Divider -->
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"

@@ -33,7 +33,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.productImg=itemView.findViewById(R.id.imgPost);
 
         itemView.setOnClickListener((view)->{
-            listener.onClick(getBindingAdapterPosition());
+            listener.onClick(getAdapterPosition());
         });
 
     }

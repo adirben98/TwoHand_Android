@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Black line separator -->
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
@@ -39,7 +38,7 @@
         <ImageView
             android:id="@+id/imgPost"
             android:layout_width="match_parent"
-            android:layout_height="467dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/red_shirt" />
@@ -80,34 +79,39 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/likeButton"
-                android:layout_width="23dp"
-                android:layout_height="32dp"
+                android:id="@+id/garbageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
+                android:scaleType="centerInside"
                 app:srcCompat="@drawable/baseline_favorite_24" />
 
             <ImageButton
                 android:id="@+id/ringing_phone"
-                android:layout_width="36dp"
-                android:layout_height="32dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ringing_phone" />
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="317dp"
-                android:layout_height="16dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#F60A0A"
-                android:backgroundTint="#DF0707"
-                android:text="Sold!" />
+                android:gravity="center"
+                android:text="Sold!"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <Button
-            android:id="@+id/edit_post_btn"
-            android:layout_width="106dp"
+            android:id="@+id/button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit" />
 

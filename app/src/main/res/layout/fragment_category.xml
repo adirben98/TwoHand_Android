@@ -7,28 +7,6 @@
     android:background="#F6C79D"
     tools:context=".CategoryFragment">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:background="#53f1af"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
-            android:src="@drawable/logo" />
-
-    </LinearLayout>
-
     <Spinner
         android:id="@+id/cloth_kind_spinner"
         android:layout_width="0dp"
@@ -37,19 +15,17 @@
         app:layout_constraintEnd_toStartOf="@+id/search_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/color_spinner"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintWidth_percent="0.4" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/color_spinner"
-        android:layout_width="154dp"
-        android:layout_height="37dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cloth_kind_spinner"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/search_btn"
@@ -57,15 +33,13 @@
         android:layout_height="37dp"
         android:backgroundTint="#FF5722"
         android:src="@android:drawable/ic_menu_search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cloth_kind_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
+        app:layout_constraintBottom_toTopOf="@+id/recyclerList"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerList"
         android:layout_width="409dp"
-        android:layout_height="611dp"
+        android:layout_height="690dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
@@ -73,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cloth_kind_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/color_spinner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

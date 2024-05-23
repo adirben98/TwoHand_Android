@@ -23,7 +23,6 @@
         android:layout_width="157dp"
         android:layout_height="122dp"
         android:layout_marginTop="1dp"
-        android:layout_marginEnd="4dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +31,7 @@
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/Username"
         android:layout_width="315dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:hint="Username"
         app:layout_constraintBottom_toTopOf="@+id/Password_et"
@@ -42,7 +41,7 @@
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/Password_et"
         android:layout_width="315dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginBottom="250dp"
         android:hint="Password"
         app:layout_constraintBottom_toTopOf="@+id/log_in_btn"

@@ -29,30 +29,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+    <ImageButton
+        android:id="@+id/cameraBtn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_baseline_photo_camera_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView" />
+
+    <ImageButton
+        android:id="@+id/galleryBtn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_photo_album_24"
+        app:layout_constraintEnd_toStartOf="@+id/cameraBtn"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView" />
+
     <Spinner
         android:id="@+id/color_spinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/kind_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraBtn" />
 
     <Spinner
         android:id="@+id/kind_spinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="25dp"
         app:layout_constraintEnd_toStartOf="@+id/color_spinner"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraBtn" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/price_et"
         android:layout_width="315dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:hint="Price"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +82,7 @@
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/description_et"
         android:layout_width="315dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:hint="Description"
         app:layout_constraintEnd_toEndOf="parent"

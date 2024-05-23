@@ -18,6 +18,9 @@ import java.util.List;
 public class FeedListFragment extends Fragment {
 
     FragmentFeedListBinding binding;
+    public FeedListFragment(){
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,14 +28,17 @@ public class FeedListFragment extends Fragment {
         binding=FragmentFeedListBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
 
-        binding.RecyclerView.setHasFixedSize(true);
-        binding.RecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerList.setHasFixedSize(true);
+        binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Post> data= Model.instance().getAllPosts();
-        data.add(new Post("adir","","tel aviv","5$","nana",""));
         ListAdapter adapter = new ListAdapter(data, getLayoutInflater());
-        binding.RecyclerView.setAdapter(adapter);
+        binding.recyclerList.setAdapter(adapter);
         adapter.SetItemClickListener(pos -> {
+            Post post=data.get(pos);
+
+
+
 
         });
         return view;

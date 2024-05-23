@@ -8,34 +8,12 @@
     tools:context=".ChoosePhotoFragment">
 
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="168dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/red_shirt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecyclerList"
-        android:layout_width="405dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="1.0" />
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:text="New Post"
+        android:text="Choose Photo"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,24 +24,22 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="203dp"
-        android:layout_marginBottom="31dp"
-        android:text="Choose Photo:"
-        app:layout_constraintBottom_toTopOf="@+id/RecyclerList"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Choose From Library:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/galleryBtn" />
 
-    <ImageButton
-        android:id="@+id/take_photo_btn"
+
+
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="235dp"
-        android:src="@drawable/ic_baseline_photo_camera_24"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="77dp"
+        android:text="Take Picture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
