@@ -1,31 +1,79 @@
 package com.example.twohand_project.Model;
 
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
+
+import androidx.core.os.HandlerCompat;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Model {
 
     private final static Model _instance=new Model();
-    List<Post> data=new LinkedList<>();
+    AppLocalDbRepository localDb;
+    FirebaseModel firebaseModel=new FirebaseModel();
+    Executor executor= Executors.newSingleThreadExecutor();
+    public Handler mainHandler= HandlerCompat.createAsync(Looper.getMainLooper());
     private Model(){};
 
     public static Model instance(){return _instance;}
-    public List<Post> getAllPosts(){return data;}
-    public void addPost(Post post){}
 
-    public List<Post> getCategoryPosts(String clothKind, String color) {
-        return null;
+
+
+    public interface Listener<T>{
+        void onComplete(T data);
+    }
+    public void getAllPosts(Listener<List<Post>> callback){
+        Long localLastUpdated= Post.getPOSTlastUpdate();
+        firebaseModel.getAllPostsSince(localLastUpdated,(posts)->{
+            executor.execute(()->{
+                helperFunc(localLastUpdated,posts);
+                List<Post> data=localDb.postDao().getAll();
+                mainHandler.post(()->{callback.onComplete(data);});
+            });
+
+        });
+    }
+    public void helperFunc(Long localLastUpdated,List<Post> posts){
+        Long time=localLastUpdated;
+        for (Post post : posts) {
+            localDb.postDao().insert(post);
+            if (post.lastUpdated > time) {
+                time=post.lastUpdated;
+            }
+        }
+        Post.setPOSTlastUpdate(time);
+    }
+
+    public void addPost(Post post,Listener<Void> listener){
+        firebaseModel.addPost(post,listener);
+    }
+
+
+    public void getPostsByCategories(String clothKind, String color,Listener<List<Post>> listener) {
+        Long localLastUpdate=Post.getPOSTlastUpdate();
+        firebaseModel.getPostsByCategories(localLastUpdate,clothKind,color,(posts)->{
+            executor.execute(()->{
+                helperFunc(localLastUpdate,posts);
+                List<Post> data=localDb.postDao().getPostsByCategories(color,clothKind);
+                mainHandler.post(()->listener.onComplete(data));}
+            );
+        });
+
+
     }
 
     public List<String> getAllClothesKinds() {
         List<String> kinds=new ArrayList<>();
-        kinds.add("red");
-        kinds.add("yellow");
-        kinds.add("blue");
-        kinds.add("green");
+        kinds.add("Shoes");
+        kinds.add("Jeans");
+        kinds.add("T-Shirt");
+        kinds.add("Pants");
         return kinds;
     }
 
@@ -37,10 +85,22 @@ public class Model {
         colors.add("green");
         return colors;
     }
-    public interface uploadImageListener{
-        void onComplete(String uri);
+
+    public void getPostById(String id,Listener<Post> listener) {
+        firebaseModel.getPostById(id, listener);
+
     }
 
-    public void uploadImage(String id, Bitmap bitmap, uploadImageListener listener) {
+    public void updatePost(String price, String description) {
+
+
     }
+
+
+
+
+    public void uploadImage(String id, Bitmap bitmap, Listener<String> listener) {
+        firebaseModel.uploadPhoto(id,bitmap,listener);
+    }
+
 }

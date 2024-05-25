@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -45,6 +46,16 @@ dependencies {
     androidTestImplementation libs.espresso.core
     implementation libs.material
     implementation libs.material.v140
-    implementation "androidx.navigation:navigation-fragment:2.7.7"
-    implementation "androidx.navigation:navigation-ui:2.7.7"
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
+    implementation libs.picasso
+    def room_version = "2.6.1"
+    implementation libs.androidx.room.runtime
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation platform(libs.firebase.bom)
+    implementation( libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth)
+
+
 }

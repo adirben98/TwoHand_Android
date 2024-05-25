@@ -39,8 +39,7 @@ public class SharingPostFragment extends Fragment {
     ActivityResultLauncher<Void> cameraAppLauncher;
     ActivityResultLauncher<String> galleryAppLauncher;
     FragmentSharingPostBinding binding;
-    ImageView postImage;
-    boolean isPhotoSelected=false;
+    Boolean isPhotoSelected=false;
     public SharingPostFragment(){}
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,14 +128,15 @@ public class SharingPostFragment extends Fragment {
                 Bitmap bitmap = ((BitmapDrawable) binding.postImage.getDrawable()).getBitmap();
                 String owner="";
                 String id= UUID.randomUUID().toString();
-                Post post=new Post(id,owner,"","",price,description,"");
+                Post post=new Post(id,owner,"","",clothKind,color,price,description,"",false);
                 Model.instance().uploadImage(id, bitmap, url->{
                     if (url != null){
                         post.setImageUrl(url);
                     }});
-                Model.instance().addPost(post);
+//                Model.instance().addPost(post,(unused)->{
+//                    Navigation.findNavController(v).popBackStack(R.id.feedListFragment,false);
+//                });
 
-                Navigation.findNavController(v).popBackStack(R.id.feedListFragment,false);
             }
         });
         return view;

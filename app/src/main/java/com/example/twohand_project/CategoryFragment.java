@@ -86,9 +86,8 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                List<Post> newData= Model.instance().getCategoryPosts(clothKind,color);
-                adapter.updateItems(newData);
-                
+                 Model.instance().getPostsByCategories(clothKind,color,(data)->{adapter.setData(data);});
+
             }
         });
         return view;

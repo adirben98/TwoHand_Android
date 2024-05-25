@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
     TextView location;
     TextView price;
     TextView description;
-    ImageView productImg;
+    ImageView postImg;
 
     public ViewHolder(@NonNull View itemView,OnItemClickListener listener) {
         super(itemView);
@@ -30,7 +31,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.description=itemView.findViewById(R.id.Description);
         this.location=itemView.findViewById(R.id.Location);
         this.price=itemView.findViewById(R.id.Price);
-        this.productImg=itemView.findViewById(R.id.imgPost);
+        this.postImg=itemView.findViewById(R.id.imgPost);
 
         itemView.setOnClickListener((view)->{
             listener.onClick(getAdapterPosition());
@@ -40,11 +41,12 @@ class ViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(Post post) {
         this.owner.setText(post.owner);
-        //this.ownerImg.
+        Picasso.get().load(post.ownerImg).into(this.ownerImg);
         this.description.setText(post.description);
         this.location.setText(post.location);
         this.price.setText(post.price);
-        //this.productImg=itemView.findViewById(R.id.imgPost);
+        Picasso.get().load(post.postImg).into(this.postImg);
+
     }
 }
 
@@ -83,9 +85,10 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
         return data.size();
     }
 
-    public void updateItems(List<Post> newItemList) {
-        data.clear();
-        data.addAll(newItemList);
+
+
+    public void setData(List<Post> newData) {
+        this.data=newData;
         notifyDataSetChanged();
     }
 }

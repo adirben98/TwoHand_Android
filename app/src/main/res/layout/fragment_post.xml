@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="635dp"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imgUser"
+                android:id="@+id/userImage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/avatar" />
@@ -36,7 +36,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/imgPost"
+            android:id="@id/postImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -79,12 +79,12 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/garbageButton"
+                android:id="@+id/favoriteBtn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
-                android:scaleType="centerInside"
+                android:scaleType="fitCenter"
                 app:srcCompat="@drawable/baseline_favorite_24" />
 
             <ImageButton
@@ -97,7 +97,7 @@
                 app:srcCompat="@drawable/ringing_phone" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/sold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -110,7 +110,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/editBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit" />

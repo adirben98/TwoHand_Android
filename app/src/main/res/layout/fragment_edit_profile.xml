@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="160dp"
-        android:layout_height="185dp"
+        android:layout_width="128dp"
+        android:layout_height="145dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,8 +20,8 @@
         android:id="@+id/avatar"
         android:layout_width="202dp"
         android:layout_height="163dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/avatar"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
@@ -30,43 +30,56 @@
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="200dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="344dp"
+        android:layout_marginEnd="41dp"
         android:src="@drawable/ic_baseline_image_search_24"
-        app:layout_constraintBottom_toTopOf="@+id/location_et"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/avatar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/location_et"
         android:layout_width="315dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="25dp"
         android:hint="Location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/number_et" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password_et"
         android:layout_width="315dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="25dp"
         android:hint="Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location_et" />
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/number_et"
+        android:layout_width="315dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:hint="Number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+
     <Button
         android:id="@+id/Edit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
         android:backgroundTint="#F16953"
         android:text="Edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_et" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

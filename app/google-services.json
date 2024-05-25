@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "522230113109",
+    "project_id": "twohandandroid",
+    "storage_bucket": "twohandandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522230113109:android:72060cfe0b4644d16c85dc",
+        "android_client_info": {
+          "package_name": "com.example.twohand_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZGj6ae6brjEcG3r6G8OT02DiEj98H69s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
