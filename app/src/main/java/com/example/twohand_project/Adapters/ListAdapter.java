@@ -1,8 +1,14 @@
 package com.example.twohand_project.Adapters;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,8 +30,10 @@ class ViewHolder extends RecyclerView.ViewHolder{
     TextView description;
     ImageView postImg;
     TextView sold;
+    View phoneCallBtn;
+    String number;
 
-    public ViewHolder(@NonNull View itemView,OnItemClickListener listener) {
+    public ViewHolder(@NonNull View itemView,OnItemClickListener listener,Context context) {
         super(itemView);
         this.owner=itemView.findViewById(R.id.Username);
         this.ownerImg=itemView.findViewById(R.id.imgUser);
@@ -34,8 +42,17 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.price=itemView.findViewById(R.id.Price);
         this.postImg=itemView.findViewById(R.id.imgPost);
         this.sold=itemView.findViewById(R.id.sold_textview);
+        this.phoneCallBtn=itemView.findViewById(R.id.ringing_phone);
 
-        itemView.setOnClickListener((view)->{
+        this.phoneCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+number));
+                context.startActivity(intent);
+            }
+        });
+        this.ownerImg.setOnClickListener((view)->{
             listener.onClick(getAdapterPosition());
         });
 
@@ -51,6 +68,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
         if(!post.sold){
             this.sold.setVisibility(View.GONE);
         }
+        this.number=post.number;
 
     }
 }
@@ -60,22 +78,24 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
     LayoutInflater inflater;
 
     OnItemClickListener listener;
+    Context context;
 
     public void SetItemClickListener(OnItemClickListener listener){
         this.listener=listener;
     }
 
 
-    public ListAdapter(List<Post> data, LayoutInflater inflater) {
+    public ListAdapter(List<Post> data, LayoutInflater inflater,Context context) {
         this.data = data;
         this.inflater = inflater;
+        this.context=context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.post_list_row,parent,false);
-        return new ViewHolder(view,listener);
+        return new ViewHolder(view,listener,context);
     }
 
     @Override

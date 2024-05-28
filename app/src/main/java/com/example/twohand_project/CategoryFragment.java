@@ -72,7 +72,7 @@ public class CategoryFragment extends Fragment {
                 .setAdapter( SpinnersAdapters.setColorsSpinner(getContext()));
 
 
-        ListAdapter adapter = new ListAdapter(data, getLayoutInflater());
+        ListAdapter adapter = new ListAdapter(data, getLayoutInflater(),getContext());
         list=binding.recyclerList;
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -41,7 +41,7 @@
         android:layout_marginTop="12dp"
         android:text="Location"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView7"
+        app:layout_constraintEnd_toStartOf="@+id/number_tv"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/usernameTextView" />
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@id/locationTextView" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Number"
@@ -69,6 +69,7 @@
         app:layout_constraintTop_toTopOf="@+id/locationTextView" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerList"
         android:layout_width="409dp"
         android:layout_height="493dp"
         android:layout_marginStart="1dp"

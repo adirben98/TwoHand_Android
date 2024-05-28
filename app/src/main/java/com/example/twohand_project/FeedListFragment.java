@@ -43,7 +43,7 @@ public class FeedListFragment extends Fragment {
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new ListAdapter(viewModel.getList().getValue(), getLayoutInflater());
+        adapter = new ListAdapter(viewModel.getList().getValue(), getLayoutInflater(),getContext());
 
         viewModel.getList().observe(getViewLifecycleOwner(),list->{
             adapter.setData(list);
