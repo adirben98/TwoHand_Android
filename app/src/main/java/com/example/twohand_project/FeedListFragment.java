@@ -1,5 +1,6 @@
 package com.example.twohand_project;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,31 +21,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FeedListFragment extends Fragment {
-    List<Post> data=new ArrayList<>();
     ListAdapter adapter;
 
     FragmentFeedListBinding binding;
+    FeedListViewmodel viewModel;
     public FeedListFragment(){
 
     }
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(this).get(FeedListViewmodel.class);
+
         binding=FragmentFeedListBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
 
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new ListAdapter(data, getLayoutInflater());
+        adapter = new ListAdapter(viewModel.getList().getValue(), getLayoutInflater());
 
-
+        viewModel.getList().observe(getViewLifecycleOwner(),list->{
+            adapter.setData(list);
+        });
 
 
         binding.recyclerList.setAdapter(adapter);
         adapter.SetItemClickListener(pos -> {
-            Post post=data.get(pos);
+            Post post=viewModel.getList().getValue().get(pos);
             FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
             Navigation.findNavController(view).navigate(action);
 
@@ -51,13 +60,6 @@ public class FeedListFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Model.instance().getAllPosts(
-                (data)->adapter.setData(data)
-        );
-    }
 
     @Override
     public void onDestroyView() {

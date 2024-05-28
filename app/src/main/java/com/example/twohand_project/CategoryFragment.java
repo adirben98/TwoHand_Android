@@ -14,7 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
-import com.example.twohand_project.Adapters.ColorsAndClothKindAdapters;
+import com.example.twohand_project.Adapters.SpinnersAdapters;
 import com.example.twohand_project.Adapters.ListAdapter;
 import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
@@ -28,7 +28,6 @@ public class CategoryFragment extends Fragment {
     String color;
     String clothKind;
     Spinner clothKindSpinner;
-    Spinner colorSpinner;
     ImageButton search;
     RecyclerView list;
     List<Post> data=new LinkedList<>();
@@ -55,10 +54,10 @@ public class CategoryFragment extends Fragment {
         });
 
         binding.clothKind
-                .setAdapter(ColorsAndClothKindAdapters.setClothKindsSpinner(getContext()));
+                .setAdapter(SpinnersAdapters.setClothKindsSpinner(getContext()));
 
 
-        colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 color=parent.getItemAtPosition(position).toString();
@@ -70,7 +69,7 @@ public class CategoryFragment extends Fragment {
             }
         });
         binding.colorSpinner
-                .setAdapter( ColorsAndClothKindAdapters.setColorsSpinner(getContext()));
+                .setAdapter( SpinnersAdapters.setColorsSpinner(getContext()));
 
 
         ListAdapter adapter = new ListAdapter(data, getLayoutInflater());

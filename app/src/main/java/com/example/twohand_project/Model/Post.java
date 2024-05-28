@@ -26,6 +26,7 @@ public class Post {
     public String location;
     public String price;
     public String description;
+    public String number;
     public String color;
     public String kind;
     public String postImg;
@@ -36,7 +37,7 @@ public class Post {
 
     public Post(){}
 
-    public Post(String id,String owner, String ownerImg, String location,String kind,String color, String price, String description, String postImg,Boolean sold) {
+    public Post(String id,String owner, String ownerImg, String location,String kind,String color, String price, String description,String number, String postImg,Boolean sold) {
         this.id=id;
         this.owner = owner;
         this.ownerImg = ownerImg;
@@ -45,6 +46,7 @@ public class Post {
         this.color=color;
         this.price = price;
         this.description = description;
+        this.number=number;
         this.postImg = postImg;
         this.sold=sold;
     }
@@ -64,9 +66,10 @@ public class Post {
         String color=(String) document.get("color");
         String price=(String) document.get("price");
         String description=(String) document.get("description");
+        String number=(String) document.get("number");
         String postImg=(String) document.get("postImg");
         Boolean sold=(Boolean) document.get("sold");
-        Post post=new Post(id,owner,ownerImg,location,kind,color,price,description,postImg,sold);
+        Post post=new Post(id,owner,ownerImg,location,kind,color,price,description,number,postImg,sold);
         Timestamp ts=(Timestamp)document.get("lastUpdated");
         post.setLastUpdated(ts.getSeconds());
         return post;
@@ -84,6 +87,7 @@ public class Post {
         json.put("color",post.color);
         json.put("price",post.price);
         json.put("description",post.description);
+        json.put("number",post.number);
         json.put("postImg",post.postImg);
         json.put("sold",post.sold);
         json.put("lastUpdated", FieldValue.serverTimestamp());
@@ -168,6 +172,14 @@ public class Post {
 
     public String getKind() {
         return kind;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public void setKind(String kind) {

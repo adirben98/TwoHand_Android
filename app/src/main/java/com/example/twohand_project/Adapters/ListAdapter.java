@@ -23,6 +23,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
     TextView price;
     TextView description;
     ImageView postImg;
+    TextView sold;
 
     public ViewHolder(@NonNull View itemView,OnItemClickListener listener) {
         super(itemView);
@@ -32,6 +33,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.location=itemView.findViewById(R.id.Location);
         this.price=itemView.findViewById(R.id.Price);
         this.postImg=itemView.findViewById(R.id.imgPost);
+        this.sold=itemView.findViewById(R.id.sold_textview);
 
         itemView.setOnClickListener((view)->{
             listener.onClick(getAdapterPosition());
@@ -46,6 +48,9 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.location.setText(post.location);
         this.price.setText(post.price);
         Picasso.get().load(post.postImg).into(this.postImg);
+        if(!post.sold){
+            this.sold.setVisibility(View.GONE);
+        }
 
     }
 }
@@ -82,6 +87,7 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
+        if (data == null) return 0;
         return data.size();
     }
 

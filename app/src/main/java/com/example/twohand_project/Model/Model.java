@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.core.os.HandlerCompat;
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors;
 public class Model {
 
     private final static Model _instance=new Model();
-    AppLocalDbRepository localDb;
+    AppLocalDbRepository localDb=AppLocalDb.getDb();
     FirebaseModel firebaseModel=new FirebaseModel();
     Executor executor= Executors.newSingleThreadExecutor();
     public Handler mainHandler= HandlerCompat.createAsync(Looper.getMainLooper());
@@ -23,18 +24,42 @@ public class Model {
 
     public static Model instance(){return _instance;}
 
+    public void register(User newUser,String password,Listener<Void> listener){
+        firebaseModel.register(newUser,password,listener);
+    }
+
+    public void isEmailTaken(String email,Listener<Boolean> listener) {
+         firebaseModel.isEmailTaken(email,listener);
+
+    }
+
+    public void isUsernameTaken(String username, Listener<Boolean> listener) {
+        firebaseModel.isUsernameTaken(username,listener);
+    }
+
+    public void logIn(String username, String password, Listener<Boolean> listener) {
+
+        firebaseModel.logIn(username,password,listener);
+    }
 
 
     public interface Listener<T>{
         void onComplete(T data);
     }
-    public void getAllPosts(Listener<List<Post>> callback){
+    private LiveData<List<Post>> postList;
+    public LiveData<List<Post>> getAllPosts() {
+        if(postList == null){
+            postList = localDb.postDao().getAll();
+            refreshAllPosts();
+        }
+        return postList;
+    }
+    public void refreshAllPosts(){
         Long localLastUpdated= Post.getPOSTlastUpdate();
         firebaseModel.getAllPostsSince(localLastUpdated,(posts)->{
             executor.execute(()->{
                 helperFunc(localLastUpdated,posts);
-                List<Post> data=localDb.postDao().getAll();
-                mainHandler.post(()->{callback.onComplete(data);});
+
             });
 
         });
@@ -48,6 +73,12 @@ public class Model {
             }
         }
         Post.setPOSTlastUpdate(time);
+    }
+    public boolean isLoggedIn(){
+        return firebaseModel.isLoggedIn();
+    }
+    public void getLoggedUser(Listener<User> listener){
+        firebaseModel.getLoggedUser(listener);
     }
 
     public void addPost(Post post,Listener<Void> listener){
@@ -85,6 +116,12 @@ public class Model {
         colors.add("green");
         return colors;
     }
+    public List<String> getLocations() {
+        List<String> cities=new ArrayList<>();
+        cities.add("Tel-Aviv");
+        return cities;
+    }
+
 
     public void getPostById(String id,Listener<Post> listener) {
         firebaseModel.getPostById(id, listener);

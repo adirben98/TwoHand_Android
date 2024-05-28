@@ -1,5 +1,7 @@
 package com.example.twohand_project;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +16,13 @@ import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.databinding.FragmentPostBinding;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 
 public class PostFragment extends Fragment {
 
     FragmentPostBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,8 +41,28 @@ public class PostFragment extends Fragment {
             if (!post.sold){
                 binding.sold.setVisibility(View.GONE);
             }
-            //check if the owner of the post is he one who watching the post and set visibility
-            binding.editBtn.setOnClickListener(Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostFragmentToEditPostFragment(id)));
+            binding.ringingPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:"+post.number));
+                    startActivity(intent);
+                }
+            });
+
+            //check if the owner of the post is the one who watching the post and set visibility
+            Model.instance().getLoggedUser((user)->{
+                        if (Objects.equals(post.owner, user.username)) {
+                            binding.editBtn.setOnClickListener(Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostFragmentToEditPostFragment(id)));
+
+                        }
+                        else{
+                            binding.editBtn.setVisibility(View.GONE);
+                        }
+                    }
+
+                    );
+
         });
 
 

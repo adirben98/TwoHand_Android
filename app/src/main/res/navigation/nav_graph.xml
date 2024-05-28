@@ -5,7 +5,7 @@
     android:id="@+id/nav_graph"
 
 
-    app:startDestination="@id/sharingPostFragment">
+    app:startDestination="@id/feedListFragment">
     <fragment
         android:id="@+id/feedListFragment"
         android:name="com.example.twohand_project.FeedListFragment"
@@ -43,5 +43,37 @@
         <argument
             android:name="id"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.twohand_project.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.example.twohand_project.LogInFragment"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFragment_to_feedListFragment"
+            app:destination="@id/feedListFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_sharingPostFragment"
+            app:destination="@id/sharingPostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.twohand_project.RegisterFragment"
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_feedListFragment"
+            app:destination="@id/feedListFragment" />
     </fragment>
 </navigation>

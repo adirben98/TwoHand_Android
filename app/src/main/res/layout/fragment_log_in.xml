@@ -20,11 +20,11 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="157dp"
-        android:layout_height="122dp"
-        android:layout_marginTop="1dp"
+        android:layout_width="180dp"
+        android:layout_height="137dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/logo"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -32,21 +32,23 @@
         android:id="@+id/Username"
         android:layout_width="315dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="100dp"
         android:hint="Username"
-        app:layout_constraintBottom_toTopOf="@+id/Password_et"
+        android:textColorHint="#8A8A8A"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/Password_et"
         android:layout_width="315dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="250dp"
+        android:layout_marginTop="25dp"
         android:hint="Password"
-        app:layout_constraintBottom_toTopOf="@+id/log_in_btn"
+        android:textColorHint="#8A8A8A"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Username" />
 
     <Button
         android:id="@+id/log_in_btn"

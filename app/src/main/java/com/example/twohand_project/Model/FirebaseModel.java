@@ -2,14 +2,20 @@ package com.example.twohand_project.Model;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,6 +35,7 @@ public class FirebaseModel {
     private FirebaseFirestore db;
 
     private FirebaseStorage storage;
+    private FirebaseAuth mAuth;
 
     FirebaseModel(){
         db=FirebaseFirestore.getInstance();
@@ -46,7 +53,7 @@ public class FirebaseModel {
         // Apply settings to Firestore instance
         db.setFirestoreSettings(settings);
         storage= FirebaseStorage.getInstance();
-
+        mAuth=FirebaseAuth.getInstance();
     };
     public void getAllPostsSince(Long since,Model.Listener<List<Post>> callback) {
         db.collection("Post").whereGreaterThanOrEqualTo("lastUpdated",new Timestamp(since,0)).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -65,9 +72,9 @@ public class FirebaseModel {
 
     }
     public void addPost(Post post, Model.Listener<Void> listener) {
-        db.collection("Post").add(Post.toJson(post)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        db.collection("Post").document(post.id).set(Post.toJson(post)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
+            public void onComplete(@NonNull Task<Void> task) {
                 listener.onComplete(null);
             }
         });
@@ -123,4 +130,79 @@ public class FirebaseModel {
             });
         }
     });}
+    public boolean isLoggedIn(){
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser!=null;
+    }
+
+    public void logIn(String username, String password, Model.Listener<Boolean> listener) {
+        db.collection("User").document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    User user = User.fromJson(task.getResult().getData());
+                    mAuth.signInWithEmailAndPassword(user.email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    listener.onComplete(task.isSuccessful());
+                                }
+                            });
+                } else {
+                    listener.onComplete(task.isSuccessful());
+                }
+            }
+        });
+    }
+
+
+    public void getLoggedUser(Model.Listener<User> listener){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        db.collection("User").whereEqualTo("email",currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    listener.onComplete(User.fromJson(task.getResult().getDocuments().get(0).getData()));
+                }
+            }
+        });
+    }
+    public void register(User newUser,String password,Model.Listener<Void> listener){
+        db.collection("User").document(newUser.username).set(User.toJson(newUser)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                mAuth.createUserWithEmailAndPassword(newUser.email, password)
+                        .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                listener.onComplete(null);
+                            }
+                        });
+
+            }
+        });
+    }
+
+    public void isEmailTaken(String username, Model.Listener<Boolean> listener) {
+        db.collection("User").document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    listener.onComplete(task.getResult().getData()!=null);
+                }
+            }
+        });
+    }
+
+    public void isUsernameTaken(String username, Model.Listener<Boolean> listener) {
+        db.collection("User").document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    listener.onComplete(task.getResult().getData()!=null);
+                }
+            }
+        });
+    }
 }

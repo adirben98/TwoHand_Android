@@ -18,11 +18,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.twohand_project.Adapters.ColorsAndClothKindAdapters;
+import com.example.twohand_project.Adapters.SpinnersAdapters;
 import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.databinding.FragmentSharingPostBinding;
@@ -92,7 +91,7 @@ public class SharingPostFragment extends Fragment {
             }
         });
         Spinner clothKindSpinner=binding.clothKind;
-        clothKindSpinner.setAdapter(ColorsAndClothKindAdapters.setClothKindsSpinner(getContext()));
+        clothKindSpinner.setAdapter(SpinnersAdapters.setClothKindsSpinner(getContext()));
         clothKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -105,7 +104,7 @@ public class SharingPostFragment extends Fragment {
             }
         });
         Spinner colorSpinner=binding.colorSpinner;
-        colorSpinner.setAdapter(ColorsAndClothKindAdapters.setColorsSpinner(getContext()));
+        colorSpinner.setAdapter(SpinnersAdapters.setColorsSpinner(getContext()));
         colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -121,21 +120,28 @@ public class SharingPostFragment extends Fragment {
         Button shareBtn=binding.shareBtn;
         shareBtn.setOnClickListener(v -> {
             price=binding.priceEt.getText().toString();
+            if (Objects.equals(price, "")) {
+                price="---";
+            }
             description=binding.descriptionEt.getText().toString();
             if (validateInput()){
                 binding.postImage.setDrawingCacheEnabled(true);
                 binding.postImage.buildDrawingCache();
                 Bitmap bitmap = ((BitmapDrawable) binding.postImage.getDrawable()).getBitmap();
-                String owner="";
                 String id= UUID.randomUUID().toString();
-                Post post=new Post(id,owner,"","",clothKind,color,price,description,"",false);
-                Model.instance().uploadImage(id, bitmap, url->{
-                    if (url != null){
-                        post.setImageUrl(url);
-                    }});
-//                Model.instance().addPost(post,(unused)->{
-//                    Navigation.findNavController(v).popBackStack(R.id.feedListFragment,false);
-//                });
+                Model.instance().getLoggedUser((user)->{
+                    Post post=new Post(id, user.username,user.userImg,user.location,clothKind,color,price,description, user.number, "",false);
+                    Model.instance().uploadImage(id, bitmap, url->{
+                        if (url != null){
+                            post.setImageUrl(url);
+                        }
+                        Model.instance().addPost(post,(unused)->{
+                            Navigation.findNavController(v).navigate(R.id.action_sharingPostFragment_to_feedListFragment);
+                        });
+                    });
+                });
+
+
 
             }
         });
@@ -151,14 +157,12 @@ public class SharingPostFragment extends Fragment {
             makeAToast("Please write a description");
             return false;
         }
-        else if (Objects.equals(price, "")) {
-            makeAToast("Please name a price");
-            return false;
-        }
+
         else if (!isPhotoSelected){
             makeAToast("Please choose a photo");
             return false;
         }
+
         return true;
     }
 }
