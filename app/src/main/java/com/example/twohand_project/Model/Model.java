@@ -3,9 +3,11 @@ package com.example.twohand_project.Model;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,16 +22,21 @@ public class Model {
     FirebaseModel firebaseModel=new FirebaseModel();
     Executor executor= Executors.newSingleThreadExecutor();
     public Handler mainHandler= HandlerCompat.createAsync(Looper.getMainLooper());
+    public interface Listener<T>{
+        void onComplete(T data);
+    }
     private Model(){};
 
     public static Model instance(){return _instance;}
+
+
 
     public void register(User newUser,String password,Listener<Void> listener){
         firebaseModel.register(newUser,password,listener);
     }
 
     public void isEmailTaken(String email,Listener<Boolean> listener) {
-         firebaseModel.isEmailTaken(email,listener);
+        firebaseModel.isEmailTaken(email,listener);
 
     }
 
@@ -38,14 +45,14 @@ public class Model {
     }
 
     public void logIn(String username, String password, Listener<Boolean> listener) {
-
         firebaseModel.logIn(username,password,listener);
     }
-
-
-
-    public interface Listener<T>{
-        void onComplete(T data);
+    private LiveData<User> user;
+    public LiveData<User> getLoggedUser(){
+        if (user == null) {
+            user=firebaseModel.getLoggedUser();
+        }
+        return user;
     }
     private LiveData<List<Post>> postList;
     public LiveData<List<Post>> getAllPosts() {
@@ -75,33 +82,58 @@ public class Model {
         }
         Post.setPOSTlastUpdate(time);
     }
-    public boolean isLoggedIn(){
-        return firebaseModel.isLoggedIn();
+    public void getPostsByCategory(String kind,String color,Listener<List<Post>> listener){
+        refreshAllPosts();
+            executor.execute(()->{
+                List<Post> data=localDb.postDao().getPostsByCategories(kind,color);
+                mainHandler.post(()->listener.onComplete(data));
+            });
+
+
     }
-    public void getLoggedUser(Listener<User> listener){
-        firebaseModel.getLoggedUser(listener);
+    public void getUserPosts(String username,Listener<List<Post>> listener){
+        refreshAllPosts();
+            executor.execute(()->{
+                List<Post> data=localDb.postDao().getUserPosts(username);
+                mainHandler.post(()->listener.onComplete(data));
+            });
+
+
     }
 
     public void addPost(Post post,Listener<Void> listener){
         firebaseModel.addPost(post,listener);
     }
-
-
-    public void getPostsByCategories(String clothKind, String color,Listener<List<Post>> listener) {
-        Long localLastUpdate=Post.getPOSTlastUpdate();
-        firebaseModel.getPostsByCategories(localLastUpdate,clothKind,color,(posts)->{
+    public void getPostById(String id,Listener<Post> listener) {
+        refreshAllPosts();
             executor.execute(()->{
-                helperFunc(localLastUpdate,posts);
-                List<Post> data=localDb.postDao().getPostsByCategories(color,clothKind);
-                mainHandler.post(()->listener.onComplete(data));}
-            );
-        });
+                Post post=localDb.postDao().getPostById(id);
+                mainHandler.post(()->{listener.onComplete(post);});
+            });
 
 
     }
+    public void getFavoritesPosts(String username,Listener<List<Post>> listener){
+        refreshAllPosts();
+            firebaseModel.getFavorites(username,(favorites)->{
+                executor.execute(()->{
+                    List<Post> data=localDb.postDao().getFavorites(favorites);
+                    mainHandler.post(()->{listener.onComplete(data);});
+                });
+            });
+
+    }
+
+    public void updateFavorites(User user){
+        firebaseModel.updateFavorites(user);
+        re
+    }
+
+
 
     public List<String> getAllClothesKinds() {
         List<String> kinds=new ArrayList<>();
+        kinds.add("Kind");
         kinds.add("Shoes");
         kinds.add("Jeans");
         kinds.add("T-Shirt");
@@ -111,6 +143,7 @@ public class Model {
 
     public List<String> getAllColors() {
         List<String> colors=new ArrayList<>();
+        colors.add("Color");
         colors.add("red");
         colors.add("yellow");
         colors.add("blue");
@@ -124,10 +157,7 @@ public class Model {
     }
 
 
-    public void getPostById(String id,Listener<Post> listener) {
-        firebaseModel.getPostById(id, listener);
 
-    }
 
     public void updatePost(String price, String description) {
 
@@ -140,5 +170,7 @@ public class Model {
     public void uploadImage(String id, Bitmap bitmap, Listener<String> listener) {
         firebaseModel.uploadPhoto(id,bitmap,listener);
     }
+
+
 
 }

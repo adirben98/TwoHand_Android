@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/feedListFragment"
+        android:icon="@drawable/home"
+        android:title="feed" />
+    <item
+        android:id="@+id/categoryFragment"
+        android:icon="@drawable/search"
+        android:title="category" />
+    <item
+        android:id="@+id/sharingPostFragment"
+        android:icon="@drawable/add"
+        android:title="add" />
+    <item
+        android:id="@+id/favoritesFragment"
+        android:icon="@drawable/red_heart"
+        android:title="favorite" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/profile"
+        android:title="proflie" />
+</menu>

@@ -13,10 +13,16 @@ import java.util.List;
 public interface PostDao {
     @Query("select * from Post")
     LiveData<List<Post>> getAll();
+//    @Query("select * from Post")
+//    List<Post> get();
+    @Query("select * from Post where owner=:username")
+    List<Post> getUserPosts(String username);
     @Query("select * from Post where id=:id")
     Post getPostById(String id);
-    @Query("select * from Post where color=:color and kind=:kind")
-    List<Post> getPostsByCategories(String color, String kind);
+    @Query("select * from Post where id in (:postIds)")
+    List<Post> getFavorites(List<String> postIds);
+    @Query("SELECT * FROM Post WHERE kind = :kind and color=:color")
+    List<Post> getPostsByCategories(String kind,String color);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Post post);
 

@@ -75,24 +75,12 @@ public class FirebaseModel {
         db.collection("Post").document(post.id).set(Post.toJson(post)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                Model.instance().refreshAllPosts();
                 listener.onComplete(null);
             }
         });
     }
-    public void getPostsByCategories(Long since,String clothKind, String color, Model.Listener<List<Post>> listener) {
-        db.collection("Post").whereEqualTo("color",color).whereEqualTo("kind",clothKind).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                List<Post> data=new ArrayList<>();
-                if (task.isSuccessful()){
-                    for(DocumentSnapshot document:task.getResult()){
-                        data.add(Post.fromJson(document.getData()));
-                    }
-                    listener.onComplete(data);
-                }
-            }
-        });
-    }
+
     public void getPostById(String id, Model.Listener<Post> listener) {
         db.collection("Post").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -157,16 +145,18 @@ public class FirebaseModel {
     }
 
 
-    public void getLoggedUser(Model.Listener<User> listener){
+    public LiveData<User> getLoggedUser(){
+        MutableLiveData<User> user=new MutableLiveData<>();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.d("TAG",currentUser.getEmail());
         db.collection("User").whereEqualTo("email",currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    listener.onComplete(User.fromJson(task.getResult().getDocuments().get(0).getData()));
-                }
+                    for(DocumentSnapshot document:task.getResult())
+                        Model.instance().mainHandler.post(()->user.setValue(User.fromJson(document.getData())));
             }
         });
+        return user;
     }
     public void register(User newUser,String password,Model.Listener<Void> listener){
         db.collection("User").document(newUser.username).set(User.toJson(newUser)).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -204,5 +194,44 @@ public class FirebaseModel {
                 }
             }
         });
+    }
+
+    public void getUserPosts(User user,Model.Listener<List<Post>> listener) {
+            db.collection("Post").whereEqualTo("owner",user.username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    List<Post> data=new ArrayList<>();
+                    for(DocumentSnapshot document:task.getResult()){
+                        data.add(Post.fromJson(document.getData()));
+                    }
+                    listener.onComplete(data);
+                }
+            });
+
+
+    }
+
+    public void getOutUserPosts(String username, Model.Listener<List<Post>> listener) {
+    }
+
+
+    public void getFavorites(String username,Model.Listener<List<String>> listener) {
+        db.collection("User").document(username).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                listener.onComplete(User.fromJson(documentSnapshot.getData()).favorites);
+            }
+        });
+    }
+
+    public void updateFavorites(User user) {
+        db.collection("User").document(user.username).update(User.toJson(user))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Model.instance().refreshAllPosts();
+                    }
+                });
+
     }
 }

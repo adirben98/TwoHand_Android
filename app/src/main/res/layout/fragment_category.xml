@@ -9,18 +9,19 @@
 
     <Spinner
         android:id="@+id/clothKind"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
         android:padding="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/search_btn"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/color_spinner"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/color_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:padding="8dp"
         app:layout_constraintEnd_toStartOf="@+id/clothKind"
         app:layout_constraintHorizontal_bias="0.5"
@@ -29,25 +30,30 @@
 
     <ImageButton
         android:id="@+id/search_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
-        android:src="@android:drawable/ic_menu_search"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerList"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:src="@android:drawable/ic_menu_search"
+        app:layout_constraintStart_toEndOf="@+id/location"
+        app:layout_constraintTop_toBottomOf="@+id/clothKind" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerList"
-        android:layout_width="409dp"
-        android:layout_height="690dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="0dp"
+        android:layout_height="482dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/location"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clothKind" />
+        app:layout_constraintTop_toBottomOf="@+id/color_spinner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

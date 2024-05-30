@@ -13,18 +13,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.twohand_project.Adapters.ListAdapter;
-import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.databinding.FragmentFeedListBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FeedListFragment extends Fragment {
     ListAdapter adapter;
 
     FragmentFeedListBinding binding;
-    FeedListViewmodel viewModel;
+    FeedListViewModel viewModel;
     public FeedListFragment(){
 
     }
@@ -35,28 +31,32 @@ public class FeedListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(FeedListViewmodel.class);
+        viewModel = new ViewModelProvider(this).get(FeedListViewModel.class);
 
         binding=FragmentFeedListBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
 
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
+        UserViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
+            adapter = new ListAdapter(user,viewModel.getList().getValue(), getLayoutInflater(),getContext());
+            binding.recyclerList.setAdapter(adapter);
+            viewModel.getList().observe(getViewLifecycleOwner(),list->{
+                adapter.setData(list);
+            });
+            adapter.SetItemClickListener(pos -> {
+                Post post=viewModel.getList().getValue().get(pos);
+                FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
+                Navigation.findNavController(view).navigate(action);
 
-        adapter = new ListAdapter(viewModel.getList().getValue(), getLayoutInflater(),getContext());
-
-        viewModel.getList().observe(getViewLifecycleOwner(),list->{
-            adapter.setData(list);
+            });
         });
 
 
-        binding.recyclerList.setAdapter(adapter);
-        adapter.SetItemClickListener(pos -> {
-            Post post=viewModel.getList().getValue().get(pos);
-            FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
-            Navigation.findNavController(view).navigate(action);
 
-        });
+
+
+
         return view;
     }
 

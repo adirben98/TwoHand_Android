@@ -9,14 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
+import com.example.twohand_project.Model.User;
 import com.example.twohand_project.R;
+import com.example.twohand_project.UserViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,9 +35,10 @@ class ViewHolder extends RecyclerView.ViewHolder{
     ImageView postImg;
     TextView sold;
     View phoneCallBtn;
+    ImageButton addToFavoriteBtn;
     String number;
 
-    public ViewHolder(@NonNull View itemView,OnItemClickListener listener,Context context) {
+    public ViewHolder(@NonNull View itemView) {
         super(itemView);
         this.owner=itemView.findViewById(R.id.Username);
         this.ownerImg=itemView.findViewById(R.id.imgUser);
@@ -43,22 +48,10 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.postImg=itemView.findViewById(R.id.imgPost);
         this.sold=itemView.findViewById(R.id.sold_textview);
         this.phoneCallBtn=itemView.findViewById(R.id.ringing_phone);
-
-        this.phoneCallBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+number));
-                context.startActivity(intent);
-            }
-        });
-        this.ownerImg.setOnClickListener((view)->{
-            listener.onClick(getAdapterPosition());
-        });
-
+        this.addToFavoriteBtn=itemView.findViewById(R.id.likeBtn);
     }
 
-    public void bind(Post post) {
+    public void bind(User user,Post post,OnItemClickListener listener,Context context) {
         this.owner.setText(post.owner);
         Picasso.get().load(post.ownerImg).into(this.ownerImg);
         this.description.setText(post.description);
@@ -69,6 +62,39 @@ class ViewHolder extends RecyclerView.ViewHolder{
             this.sold.setVisibility(View.GONE);
         }
         this.number=post.number;
+        if (user.favorites.contains(post.id)){
+            this.addToFavoriteBtn.setImageResource(R.drawable.red_heart);
+        }
+
+        this.addToFavoriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!user.favorites.contains(post.id)) {
+                    user.favorites.add(post.id);
+                    Model.instance().updateFavorites(user);
+                    addToFavoriteBtn.setImageResource(R.drawable.red_heart);
+                }
+                else{
+                    user.favorites.remove(post.id);
+                    Model.instance().updateFavorites(user);
+                    addToFavoriteBtn.setImageResource(R.drawable.heart);
+                }
+
+
+            }
+        });
+        this.phoneCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+number));
+                context.startActivity(intent);
+            }
+        });
+        this.postImg.setOnClickListener((view)->{
+            listener.onClick(getAdapterPosition());
+        });
+
 
     }
 }
@@ -79,13 +105,15 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     OnItemClickListener listener;
     Context context;
+    User user;
 
     public void SetItemClickListener(OnItemClickListener listener){
         this.listener=listener;
     }
 
 
-    public ListAdapter(List<Post> data, LayoutInflater inflater,Context context) {
+    public ListAdapter(User user,List<Post> data, LayoutInflater inflater,Context context) {
+        this.user=user;
         this.data = data;
         this.inflater = inflater;
         this.context=context;
@@ -95,13 +123,13 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.post_list_row,parent,false);
-        return new ViewHolder(view,listener,context);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post=data.get(position);
-        holder.bind(post);
+        holder.bind(user,post,listener,context);
 
     }
 

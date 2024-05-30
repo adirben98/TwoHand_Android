@@ -8,7 +8,7 @@ import com.example.twohand_project.Model.Post;
 
 import java.util.List;
 
-public class FeedListViewmodel extends ViewModel {
+public class FeedListViewModel extends ViewModel {
     private LiveData<List<Post>> list= Model.instance().getAllPosts();
     public LiveData<List<Post>> getList(){return list;}
 }

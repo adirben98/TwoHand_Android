@@ -51,10 +51,12 @@ public class Post {
         this.sold=sold;
     }
     static void setPOSTlastUpdate(Long localLastUpdated){
-        MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).edit().putLong("POST_last_update",localLastUpdated).commit();
+        MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).edit().putLong("POST_Last_Update",localLastUpdated).commit();
     }
     static Long getPOSTlastUpdate(){
-        return MyApplication.getMyContext().getSharedPreferences("TAG",Context.MODE_PRIVATE).getLong("POST_last_update",0);
+
+        long time = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("POST_Last_Update", 0);
+        return time;
     }
 
     public static Post fromJson(Map<String, Object> document) {

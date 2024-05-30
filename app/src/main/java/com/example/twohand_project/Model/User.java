@@ -7,11 +7,12 @@ import androidx.room.PrimaryKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Entity
 public class User {
 
-    public String username;
     public String email;
+    public String username;
+
     public String userImg;
     public String location;
     public String number;

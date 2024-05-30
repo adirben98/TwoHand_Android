@@ -10,9 +10,11 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
+import com.example.twohand_project.Model.User;
 import com.example.twohand_project.databinding.FragmentPostBinding;
 import com.squareup.picasso.Picasso;
 
@@ -51,19 +53,41 @@ public class PostFragment extends Fragment {
             });
 
             //check if the owner of the post is the one who watching the post and set visibility
-            Model.instance().getLoggedUser((user)->{
-                        if (Objects.equals(post.owner, user.username)) {
-                            binding.editBtn.setOnClickListener(Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostFragmentToEditPostFragment(id)));
+            Model.instance().getLoggedUser().observe(getViewLifecycleOwner(),(user)->{
+                ImageButton addToFavoriteBtn=binding.favoriteBtn;
+                if (user.favorites.contains(post.id)){
+                    addToFavoriteBtn.setImageResource(R.drawable.red_heart);
+                }
 
+                addToFavoriteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!user.favorites.contains(post.id)) {
+                            user.favorites.add(post.id);
+                            Model.instance().updateFavorites(user);
+                            addToFavoriteBtn.setImageResource(R.drawable.red_heart);
                         }
                         else{
-                            binding.editBtn.setVisibility(View.GONE);
+                            user.favorites.remove(post.id);
+                            Model.instance().updateFavorites(user);
+                            addToFavoriteBtn.setImageResource(R.drawable.heart);
                         }
+                    }
+                });
+                if (Objects.equals(post.owner, user.username)) {
+                    binding.editBtn.setOnClickListener(Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostFragmentToEditPostFragment(id)));
+
+                }
+                else{
+                    binding.editBtn.setVisibility(View.GONE);
+                }
+            });
+
                     }
 
                     );
 
-        });
+
 
 
 

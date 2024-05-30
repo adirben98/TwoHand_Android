@@ -1,90 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6C79D"
+    android:orientation="vertical"
     tools:context=".MainActivity"
-
     >
-
-    <ImageButton
-        android:id="@+id/home_btn"
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/search_button"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/home" />
-
-    <ImageButton
-        android:id="@id/search_button"
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-
-        app:layout_constraintEnd_toStartOf="@+id/add_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/home_btn"
-        app:srcCompat="@drawable/search" />
-
-    <ImageButton
-        android:id="@+id/add_btn"
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:layout_gravity="bottom"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/favourite_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/search_button"
-        app:srcCompat="@drawable/add" />
-
-    <ImageButton
-        android:id="@+id/favourite_btn"
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:hapticFeedbackEnabled="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profile_button"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/add_btn"
-        app:srcCompat="@drawable/favourite" />
-
-    <ImageButton
-        android:id="@+id/profile_button"
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/favourite_btn"
-        app:srcCompat="@drawable/profile" />
+    <include layout="@layout/custom_menu"/>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_container"
+        android:id="@+id/main_NavHost"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/home_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bar_menu" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

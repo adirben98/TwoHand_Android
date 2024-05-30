@@ -1,46 +1,65 @@
 package com.example.twohand_project;
 
+import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.twohand_project.Adapters.ListAdapter;
 import com.example.twohand_project.Model.Model;
+import com.example.twohand_project.Model.User;
 import com.example.twohand_project.databinding.FragmentProfileBinding;
 import com.squareup.picasso.Picasso;
 
-
 public class ProfileFragment extends Fragment {
-FragmentProfileBinding binding;
+    FragmentProfileBinding binding;
+    public User user;
+    ProfileViewModel viewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding=FragmentProfileBinding.inflate(inflater,container,false);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel=new ViewModelProvider(this).get(ProfileViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
 
         binding.recyclerList.setHasFixedSize(true);
-        binding.recyclerList.setLayoutManager(new GridLayoutManager(getContext(),3));
-        //binding.recyclerList.setAdapter(new ListAdapter());
+        binding.recyclerList.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
 
-        Model.instance().getLoggedUser((user)->{
-            binding.usernameTextView.setText(user.username);
-            binding.locationTextView.setText(user.location);
-            binding.numberTv.setText(user.number);
-            Picasso.get().load(user.userImg).into(binding.avatarImageView);
-            ProfileFragmentDirections. ActionProfileFragmentToEditProfileFragment action = ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(user.username);
-            binding.editButton.setOnClickListener(Navigation.createNavigateOnClickListener(action));
+        UserViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User newUser) {
+                user = newUser;
+                binding.usernameTextView.setText(user.username);
+                binding.locationTextView.setText(user.location);
+                binding.numberTv.setText(user.number);
+                Picasso.get().load(user.userImg).into(binding.avatarImageView);
 
+                ListAdapter adapter=new ListAdapter(user,viewModel.getData(), getLayoutInflater(), getContext());
+                binding.recyclerList.setAdapter(adapter);
+                Model.instance().getUserPosts(user.username, (posts) -> {
+                    viewModel.setData(posts);
+                    adapter.setData(posts);
+                });
+
+                ProfileFragmentDirections.ActionProfileFragmentToEditProfileFragment action =
+                        ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(user.username);
+                binding.editButton.setOnClickListener(Navigation.createNavigateOnClickListener(action));
+            }
         });
-        // Inflate the layout for this fragment
+
         return binding.getRoot();
     }
+
+
 }

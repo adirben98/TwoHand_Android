@@ -72,13 +72,13 @@ public class RegisterFragment extends Fragment {
         binding=FragmentRegisterBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
 
-        binding.cameraButton.setOnClickListener(new View.OnClickListener() {
+        binding.cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cameraAppLauncher.launch(null);
             }
         });
-        binding.galleryButton.setOnClickListener(new View.OnClickListener() {
+        binding.galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 galleryAppLauncher.launch("image/*");
@@ -97,7 +97,7 @@ public class RegisterFragment extends Fragment {
         });
         binding.locationSpinner.setAdapter(SpinnersAdapters.setLocationSpinner(getContext()));
 
-        binding.nextBtn.setOnClickListener(new View.OnClickListener() {
+        binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
