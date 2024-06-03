@@ -43,5 +43,12 @@ public class SpinnersAdapters {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return adapter;
     }
+    public static ArrayAdapter<String> fakeAdapter(Context context){
+        List<String> fakeList=new ArrayList<>();
+        fakeList.add("Location");
+        ArrayAdapter<String> locationSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,fakeList);
+        locationSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return locationSpinnerAdapter;
+    }
 
 }

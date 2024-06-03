@@ -181,7 +181,7 @@ public class SharingPostFragment extends Fragment {
             makeAToast("Please choose a color");
             return false;
         }
-        else if (!price.matches("\\d+")) {
+        else if (!price.matches("\\d+")&& !Objects.equals(price,"")) {
             makeAToast("Please enter a valid numeric price");
             return false;
 

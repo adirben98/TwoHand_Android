@@ -20,6 +20,9 @@ import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.databinding.FragmentFeedListBinding;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class FeedListFragment extends Fragment {
     ListAdapter adapter;
 
@@ -52,6 +55,7 @@ public class FeedListFragment extends Fragment {
             adapter = new ListAdapter(user,viewModel.getList().getValue(), getLayoutInflater(),getContext());
             binding.recyclerList.setAdapter(adapter);
             viewModel.getList().observe(getViewLifecycleOwner(),list->{
+                list=list.stream().filter(post-> !Objects.equals(post.owner, user.username)).collect(Collectors.toList());
                 adapter.setData(list);
             });
             adapter.SetOnPhotoClickListener(pos -> {

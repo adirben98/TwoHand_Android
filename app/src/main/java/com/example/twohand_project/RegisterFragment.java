@@ -97,7 +97,8 @@ public class RegisterFragment extends Fragment {
 
             }
         });
-        //binding.locationSpinner.setAdapter(SpinnersAdapters.setLocationSpinner(null,getContext()));
+        binding.locationSpinner.setAdapter(SpinnersAdapters.fakeAdapter(getContext()));
+        SpinnersAdapters.setLocationSpinner(null,getContext(),(adapter)->binding.locationSpinner.setAdapter(adapter));
 
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,18 +107,18 @@ public class RegisterFragment extends Fragment {
                 email=binding.emailEt.getText().toString();
                 username= binding.UsernameEt.getText().toString();
                 number=binding.numberEt.getText().toString();
-                SpinnersAdapters.setLocationSpinner(null,getContext(),(adapter)->binding.locationSpinner.setAdapter(adapter));
                 password=binding.passwordEt.getText().toString();
 
                 if (validateInput()) {
-                    Model.instance().isEmailTaken(email,(emailIsTaken)->{
-                        if (emailIsTaken) {
-                            makeAToast("Email Is Already Taken");
+                    Model.instance().isUsernameTaken(username,(usernameIsTaken)->{
+                        if (usernameIsTaken) {
+                            makeAToast("Username is Already Taken");
+                        }else {
+                            Model.instance().isEmailTaken(email,(emailIsTaken)->{
+                                if (emailIsTaken) {
+                                    makeAToast("Email Is Already Taken");
 
-                        } else {
-                            Model.instance().isUsernameTaken(username,(usernameIsTaken)->{
-                                if (usernameIsTaken) {
-                                    makeAToast("Username is Already Taken");
+
                                 } else {
                                     binding.avatar.setDrawingCacheEnabled(true);
                                     binding.avatar.buildDrawingCache();
@@ -164,7 +165,7 @@ public class RegisterFragment extends Fragment {
         } else if (number.length()!=10 && !number.matches("\\d+") ) {
             makeAToast("Please enter a valid number");
             return false;
-        } else if (Objects.equals(location, "Choose Location")) {
+        } else if (Objects.equals(location, "Location")) {
             makeAToast("Please choose a location");
             return false;
         } else if (password.length()<6) {

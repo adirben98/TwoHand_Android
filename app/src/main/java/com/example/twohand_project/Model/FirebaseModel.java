@@ -80,17 +80,7 @@ public class FirebaseModel {
         });
     }
 
-    public void getPostById(String id, Model.Listener<Post> listener) {
-        db.collection("Post").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful())
-                    listener.onComplete(Post.fromJson(task.getResult().getData()));
-            }
-        });
 
-
-    }
     void uploadPhoto(String id, Bitmap bitmap, Model.Listener<String> listener){
 
     StorageReference storageRef = storage.getReference();
@@ -195,25 +185,6 @@ public class FirebaseModel {
             }
         });
     }
-
-    public void getUserPosts(User user,Model.Listener<List<Post>> listener) {
-            db.collection("Post").whereEqualTo("owner",user.username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    List<Post> data=new ArrayList<>();
-                    for(DocumentSnapshot document:task.getResult()){
-                        data.add(Post.fromJson(document.getData()));
-                    }
-                    listener.onComplete(data);
-                }
-            });
-
-
-    }
-
-
-
-
     public void getFavorites(String username,Model.Listener<List<String>> listener) {
         db.collection("User").document(username).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

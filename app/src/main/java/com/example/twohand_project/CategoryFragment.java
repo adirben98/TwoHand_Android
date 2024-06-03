@@ -37,6 +37,7 @@ import com.example.twohand_project.databinding.FragmentCategoryBinding;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class CategoryFragment extends Fragment {
@@ -44,7 +45,6 @@ public class CategoryFragment extends Fragment {
     String clothKind;
     String location;
     Spinner clothKindSpinner;
-    ImageButton search;
     RecyclerView list;
     CategoryViewModel viewModel;
 
@@ -94,12 +94,9 @@ public class CategoryFragment extends Fragment {
         SpinnersAdapters.setLocationSpinner(null,getContext(),(adapter)->{
             binding.location.setAdapter(adapter);
         });
-
-
-
+        binding.location.setAdapter(SpinnersAdapters.fakeAdapter(getContext()));
         binding.clothKind.setAdapter(SpinnersAdapters.setClothKindsSpinner(getContext()));
-
-
+        binding.colorSpinner.setAdapter( SpinnersAdapters.setColorsSpinner(getContext()));
         binding.colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -111,8 +108,6 @@ public class CategoryFragment extends Fragment {
 
             }
         });
-        binding.colorSpinner
-                .setAdapter( SpinnersAdapters.setColorsSpinner(getContext()));
 
         list=binding.recyclerList;
         list.setHasFixedSize(true);
@@ -125,47 +120,19 @@ public class CategoryFragment extends Fragment {
             binding.searchBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (validateInput()) {
                                 Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
+                                    data=data.stream().filter(post->!Objects.equals(post.owner,user.username)).collect(Collectors.toList());
                                     viewModel.setData(data);
                                     adapter.setData(data);
                                 });
-                            }
                         }
                     });
         });
-
-
-
-
-
         return view;
     }
 
-    public void makeAToast(String text){
-        new AlertDialog.Builder(getContext())
-                .setTitle("Invalid Input")
-                .setMessage(text)
-                .setPositiveButton("Ok", (dialog,which)->{
-                })
-                .create().show();
-    }
-    public boolean validateInput(){
-        if (Objects.equals(color, "Color")) {
-            makeAToast("Please choose a color");
-            return false;
-        }
-        else if (Objects.equals(clothKind, "Kind")) {
-            makeAToast("Please choose a the kind of cloth");
-            return false;
-        }
 
 
-
-
-
-        return true;
-    }
 
 
 }
