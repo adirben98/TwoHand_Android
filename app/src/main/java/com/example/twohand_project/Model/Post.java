@@ -96,6 +96,12 @@ public class Post {
         return json;
     }
 
+    public static Map<String, Object> update(User user, Map<String, Object> data) {
+        data.put("number",user.number);
+        data.put("userImg",user.userImg);
+        return data;
+    }
+
     @NonNull
     public String getId() {
         return id;

@@ -16,16 +16,14 @@ public class User {
     public String userImg;
     public String location;
     public String number;
-    public List<String> posts;
     public List<String> favorites;
 
-    public User( String username,String email, String userImg, String location, String number,List<String> posts, List<String> favorites) {
+    public User( String username,String email, String userImg, String location, String number, List<String> favorites) {
         this.email = email;
         this.username = username;
         this.userImg = userImg;
         this.location = location;
         this.number = number;
-        this.posts=posts;
         this.favorites = favorites;
     }
     public User(){}
@@ -85,9 +83,8 @@ public class User {
         String userImg=(String)data.get("userImg");
         String location=(String)data.get("location");
         String number=(String) data.get("number");
-        List<String> posts=(List<String>) data.get("posts");
         List<String> favorites=(List<String>) data.get("favorites");
-        return new User(username,email,userImg,location,number,posts,favorites);
+        return new User(username,email,userImg,location,number,favorites);
     }
     public static Map<String, Object> toJson(User user){
         Map<String, Object> json=new HashMap<>();
@@ -96,7 +93,6 @@ public class User {
         json.put("userImg",user.userImg);
         json.put("location",user.location);
         json.put("number",user.number);
-        json.put("posts",user.posts);
         json.put("favorites",user.favorites);
 
         return json;

@@ -1,5 +1,7 @@
 package com.example.twohand_project;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -78,7 +80,7 @@ public class RegisterFragment extends Fragment {
                 cameraAppLauncher.launch(null);
             }
         });
-        binding.galleryBtn.setOnClickListener(new View.OnClickListener() {
+        binding.gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 galleryAppLauncher.launch("image/*");
@@ -95,7 +97,7 @@ public class RegisterFragment extends Fragment {
 
             }
         });
-        binding.locationSpinner.setAdapter(SpinnersAdapters.setLocationSpinner(getContext()));
+        //binding.locationSpinner.setAdapter(SpinnersAdapters.setLocationSpinner(null,getContext()));
 
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +106,7 @@ public class RegisterFragment extends Fragment {
                 email=binding.emailEt.getText().toString();
                 username= binding.UsernameEt.getText().toString();
                 number=binding.numberEt.getText().toString();
-                binding.locationSpinner.setAdapter(SpinnersAdapters.setLocationSpinner(getContext()));
+                SpinnersAdapters.setLocationSpinner(null,getContext(),(adapter)->binding.locationSpinner.setAdapter(adapter));
                 password=binding.passwordEt.getText().toString();
 
                 if (validateInput()) {
@@ -122,9 +124,11 @@ public class RegisterFragment extends Fragment {
                                     Bitmap bitmap = ((BitmapDrawable) binding.avatar.getDrawable()).getBitmap();
                                     String id= UUID.randomUUID().toString();
                                     Model.instance().uploadImage(id,bitmap,(url)->{
-                                        User newUser=new User(username,email,id,location,number,new ArrayList<>(),new ArrayList<>());
+                                        User newUser=new User(username,email,url,location,number.toString(), new ArrayList<>());
                                         Model.instance().register(newUser,password,(unused)->{
-                                            Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_feedListFragment);
+                                            Intent intent=new Intent(getActivity(), MainActivity.class);
+                                            startActivity(intent);
+                                            getActivity().finish();
 
                                         });
                                     });
@@ -140,8 +144,12 @@ public class RegisterFragment extends Fragment {
         return view;
     }
     public void makeAToast(String text){
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-
+        new AlertDialog.Builder(getContext())
+                .setTitle("Invalid Input")
+                .setMessage(text)
+                .setPositiveButton("Ok", (dialog,which)->{
+                })
+                .create().show();
     }
 
     public boolean validateInput(){
@@ -153,14 +161,14 @@ public class RegisterFragment extends Fragment {
         else if (Objects.equals(username, "")) {
             makeAToast("Please enter an username");
             return false;
-        } else if (Objects.equals(number, "")) {
-            makeAToast("Please enter a number");
+        } else if (number.length()!=10 && !number.matches("\\d+") ) {
+            makeAToast("Please enter a valid number");
             return false;
         } else if (Objects.equals(location, "Choose Location")) {
             makeAToast("Please choose a location");
             return false;
-        } else if (Objects.equals(password, "")) {
-            makeAToast("Please enter a password");
+        } else if (password.length()<6) {
+            makeAToast("Password must contains at least 6 characters");
             return false;
         }
 

@@ -21,8 +21,8 @@ public interface PostDao {
     Post getPostById(String id);
     @Query("select * from Post where id in (:postIds)")
     List<Post> getFavorites(List<String> postIds);
-    @Query("SELECT * FROM Post WHERE kind = :kind and color=:color")
-    List<Post> getPostsByCategories(String kind,String color);
+    @Query("SELECT * FROM Post WHERE kind = :kind and color=:color and location=:location")
+    List<Post> getPostsByCategories(String kind,String color,String location);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Post post);
 

@@ -11,7 +11,7 @@
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo</item>
         <item name="android:windowSplashScreenIconBackgroundColor">@color/splash_icon_background</item>
-        <item name="android:windowSplashScreenAnimationDuration">10000</item>
+        <item name="android:windowSplashScreenAnimationDuration">2000</item>
         <!-- Ensure no action bar is used -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

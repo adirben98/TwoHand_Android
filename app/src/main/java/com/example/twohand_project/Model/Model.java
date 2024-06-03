@@ -15,17 +15,43 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class Model {
 
     private final static Model _instance=new Model();
-    AppLocalDbRepository localDb=AppLocalDb.getDb();
-    FirebaseModel firebaseModel=new FirebaseModel();
-    Executor executor= Executors.newSingleThreadExecutor();
-    public Handler mainHandler= HandlerCompat.createAsync(Looper.getMainLooper());
+    private AppLocalDbRepository localDb=AppLocalDb.getDb();
+    private FirebaseModel firebaseModel=new FirebaseModel();
+    private Executor executor= Executors.newSingleThreadExecutor();
+    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+    final public MutableLiveData<LoadingState> EventFeedLoadingState=new MutableLiveData<>(LoadingState.Not_Loading);
+
+    public enum LoadingState{
+        Loading,
+        Not_Loading
+    }
+
+    public void getOtherUser(String username,Listener<User> listener) {
+        firebaseModel.getUserByUsername(username,listener);
+    }
+
+    public boolean isUserLoggedIn() {
+        return firebaseModel.isLoggedIn();
+    }
+
+    public void logout() {
+        firebaseModel.logOut();
+    }
+
+
     public interface Listener<T>{
         void onComplete(T data);
     }
-    private Model(){};
+    private Model(){
+    };
 
     public static Model instance(){return _instance;}
 
@@ -47,12 +73,8 @@ public class Model {
     public void logIn(String username, String password, Listener<Boolean> listener) {
         firebaseModel.logIn(username,password,listener);
     }
-    private LiveData<User> user;
-    public LiveData<User> getLoggedUser(){
-        if (user == null) {
-            user=firebaseModel.getLoggedUser();
-        }
-        return user;
+    public void getLoggedUser(Listener<User> listener){
+        firebaseModel.getLoggedUser(listener);
     }
     private LiveData<List<Post>> postList;
     public LiveData<List<Post>> getAllPosts() {
@@ -63,6 +85,18 @@ public class Model {
         return postList;
     }
     public void refreshAllPosts(){
+        EventFeedLoadingState.setValue(LoadingState.Loading);
+        Long localLastUpdated= Post.getPOSTlastUpdate();
+        firebaseModel.getAllPostsSince(localLastUpdated,(posts)->{
+            executor.execute(()->{
+                helperFunc(localLastUpdated,posts);
+                EventFeedLoadingState.postValue(LoadingState.Not_Loading);
+
+            });
+
+        });
+    }
+    public void refreshAllPostsNoProgressBar(){
         Long localLastUpdated= Post.getPOSTlastUpdate();
         firebaseModel.getAllPostsSince(localLastUpdated,(posts)->{
             executor.execute(()->{
@@ -82,10 +116,10 @@ public class Model {
         }
         Post.setPOSTlastUpdate(time);
     }
-    public void getPostsByCategory(String kind,String color,Listener<List<Post>> listener){
+    public void getPostsByCategory(String kind,String color,String location,Listener<List<Post>> listener){
         refreshAllPosts();
             executor.execute(()->{
-                List<Post> data=localDb.postDao().getPostsByCategories(kind,color);
+                List<Post> data=localDb.postDao().getPostsByCategories(kind,color,location);
                 mainHandler.post(()->listener.onComplete(data));
             });
 
@@ -126,7 +160,8 @@ public class Model {
 
     public void updateFavorites(User user){
         firebaseModel.updateFavorites(user);
-        re
+        refreshAllPostsNoProgressBar();
+
     }
 
 
@@ -150,27 +185,47 @@ public class Model {
         colors.add("green");
         return colors;
     }
-    public List<String> getLocations() {
-        List<String> cities=new ArrayList<>();
-        cities.add("Tel-Aviv");
-        return cities;
+    public void getLocations(Listener<List<String>> listener) {
+        List<String> data=new ArrayList<>();
+        RetrofitClient.getClient().create(CitiesApi.class).getCities("IL","P",1000,"adir")
+                .enqueue(new Callback<GeoNamesResponse>() {
+                    @Override
+                    public void onResponse(Call<GeoNamesResponse> call, Response<GeoNamesResponse> response) {
+                        List<City> cities = response.body().getGeonames();
+                        for (City city : cities) {
+                            data.add(city.getName());
+                        }
+                        mainHandler.post(()-> listener.onComplete(data));
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<GeoNamesResponse> call, Throwable throwable) {
+                        Log.e("API Call Failure", throwable.getMessage());
+
+                    }
+                });
     }
 
-
-
-
-    public void updatePost(String price, String description) {
-
+    public void updatePost(Post post,Listener<Void> listener) {
+            firebaseModel.updatePost(post,listener);
+            refreshAllPosts();
 
     }
-
-
-
-
+    public void deletePost(Post post, Listener<Void> listener) {
+        firebaseModel.deletePost(post);
+        executor.execute(()->{
+            localDb.postDao().delete(post);
+            mainHandler.post(()->{listener.onComplete(null);});
+        });
+        refreshAllPosts();
+    }
     public void uploadImage(String id, Bitmap bitmap, Listener<String> listener) {
         firebaseModel.uploadPhoto(id,bitmap,listener);
     }
 
-
+    public void updateUserAndHisPosts(User user, Listener<Void> listener) {
+        firebaseModel.updateUserAndHisPosts(user,listener);
+    }
 
 }

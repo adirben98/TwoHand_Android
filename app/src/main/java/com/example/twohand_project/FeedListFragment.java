@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.twohand_project.Adapters.ListAdapter;
+import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
 import com.example.twohand_project.databinding.FragmentFeedListBinding;
 
@@ -21,20 +25,26 @@ public class FeedListFragment extends Fragment {
 
     FragmentFeedListBinding binding;
     FeedListViewModel viewModel;
-    public FeedListFragment(){
 
-    }
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(FeedListViewModel.class);
-
         binding=FragmentFeedListBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
+        Model.instance().EventFeedLoadingState.observe(getViewLifecycleOwner(),status->{
+            binding.SwipeRefresh.setRefreshing(status == Model.LoadingState.Loading);
+
+        });
+
+        binding.SwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Model.instance().refreshAllPosts();
+            }
+        });
+
 
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -44,11 +54,16 @@ public class FeedListFragment extends Fragment {
             viewModel.getList().observe(getViewLifecycleOwner(),list->{
                 adapter.setData(list);
             });
-            adapter.SetItemClickListener(pos -> {
+            adapter.SetOnPhotoClickListener(pos -> {
                 Post post=viewModel.getList().getValue().get(pos);
                 FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
                 Navigation.findNavController(view).navigate(action);
 
+            });
+            adapter.SetOnUsernameClickListener(pos->{
+                Post post=viewModel.getList().getValue().get(pos);
+                FeedListFragmentDirections.ActionFeedListFragmentToOtherUserProfileFragment action = FeedListFragmentDirections.actionFeedListFragmentToOtherUserProfileFragment(post.owner);
+                Navigation.findNavController(view).navigate(action);
             });
         });
 

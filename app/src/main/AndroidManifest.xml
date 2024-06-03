@@ -4,6 +4,8 @@
 
     <application
         android:name=".MyApplication"
+        android:networkSecurityConfig="@xml/network_security_config"
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TwoHand_Project"
         tools:targetApi="31">
+
+        <activity
+            android:name=".RegisterLoginActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

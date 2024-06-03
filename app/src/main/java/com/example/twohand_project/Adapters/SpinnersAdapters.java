@@ -6,6 +6,7 @@ import android.widget.SpinnerAdapter;
 
 import com.example.twohand_project.Model.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpinnersAdapters {
@@ -23,11 +24,24 @@ public class SpinnersAdapters {
         return  colorSpinnerAdapter;
     };
 
-    public static ArrayAdapter<String> setLocationSpinner(Context context) {
-        List<String> locations=Model.instance().getLocations();
-        ArrayAdapter<String> locationSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,locations);
-        locationSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return locationSpinnerAdapter;
+    public static void setLocationSpinner(String location, Context context, Model.Listener<ArrayAdapter<String>> listener) {
+        Model.instance().getLocations(cities->{
+            if(location!=null)
+                cities.add(0,location);
+            ArrayAdapter<String> locationSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,cities);
+            locationSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            listener.onComplete(locationSpinnerAdapter);
+        });
+
 
     }
+    public static ArrayAdapter<String> setSoldSpinner(Context context) {
+        List<String> options=new ArrayList<>();
+        options.add("Sold");
+        options.add("Back To Stock");
+        ArrayAdapter<String> adapter= new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,options);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
+    }
+
 }

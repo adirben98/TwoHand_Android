@@ -1,5 +1,6 @@
 package com.example.twohand_project;
 
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -42,15 +43,13 @@ public class SharingPostFragment extends Fragment {
     ActivityResultLauncher<String> galleryAppLauncher;
     FragmentSharingPostBinding binding;
     Boolean isPhotoSelected = false;
-    UserViewModel userViewModel;
-    SharingPostViewModel viewModel;
+    PhotoViewModel viewModel;
 
-    public SharingPostFragment() {}
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         cameraAppLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
             @Override
             public void onActivityResult(Bitmap o) {
@@ -79,30 +78,27 @@ public class SharingPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSharingPostBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        viewModel=new ViewModelProvider(this).get(SharingPostViewModel.class);
+        viewModel=new ViewModelProvider(this).get(PhotoViewModel.class);
         if (viewModel.getBitmap()!=null)
             binding.postImage.setImageBitmap(viewModel.getBitmap());
         if (viewModel.getUrl()!=null)
             binding.postImage.setImageURI(viewModel.getUrl());
 
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        userViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+        UserViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User newUser) {
                 user = newUser;
             }
         });
 
-        ImageButton cameraBtn = binding.cameraBtn;
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
+        binding.cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cameraAppLauncher.launch(null);
             }
         });
 
-        ImageButton galleryBtn = binding.galleryBtn;
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
+        binding.gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 galleryAppLauncher.launch("image/*");
@@ -136,11 +132,12 @@ public class SharingPostFragment extends Fragment {
         Button shareBtn = binding.shareBtn;
         shareBtn.setOnClickListener(v -> {
             price = binding.priceEt.getText().toString();
-            if (Objects.equals(price, "")) {
-                price = "---";
-            }
+            
             description = binding.descriptionEt.getText().toString();
             if (validateInput()) {
+                if (Objects.equals(price, "")) {
+                    price = "---";
+                }
                 binding.postImage.setDrawingCacheEnabled(true);
                 binding.postImage.buildDrawingCache();
                 Bitmap bitmap = ((BitmapDrawable) binding.postImage.getDrawable()).getBitmap();
@@ -161,23 +158,38 @@ public class SharingPostFragment extends Fragment {
     }
 
     public void makeAToast(String text) {
-        Toast toast = Toast.makeText(getContext(), text, Toast.LENGTH_SHORT);
-        toast.show();
+
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Invalid Input")
+                .setMessage(text)
+                .setPositiveButton("Ok", (dialog,which)->{
+                })
+                .create().show();
     }
 
     public boolean validateInput() {
-        if (Objects.equals(description, "")) {
-            makeAToast("Please write a description");
-            return false;
-        } else if (Objects.equals(clothKind, "Kind")) {
-            makeAToast("Please choose the kind of cloth");
-            return false;
-        } else if (Objects.equals(color, "Color")) {
-            makeAToast("Please choose a color");
-            return false;
-        } else if (!isPhotoSelected) {
+        if (!isPhotoSelected) {
             makeAToast("Please choose a photo");
             return false;
+        }
+        else if (Objects.equals(clothKind, "Kind")) {
+            makeAToast("Please choose the kind of cloth");
+            return false;
+        }
+        else if (Objects.equals(color, "Color")) {
+            makeAToast("Please choose a color");
+            return false;
+        }
+        else if (!price.matches("\\d+")) {
+            makeAToast("Please enter a valid numeric price");
+            return false;
+
+        }
+        else if (Objects.equals(description, "")) {
+            makeAToast("Please write a description");
+            return false;
+
         }
         return true;
     }

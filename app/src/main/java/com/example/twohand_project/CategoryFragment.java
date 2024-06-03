@@ -1,16 +1,25 @@
 package com.example.twohand_project;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -46,7 +55,10 @@ public class CategoryFragment extends Fragment {
         super.onAttach(context);
         viewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
 
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,8 +91,11 @@ public class CategoryFragment extends Fragment {
 
             }
         });
+        SpinnersAdapters.setLocationSpinner(null,getContext(),(adapter)->{
+            binding.location.setAdapter(adapter);
+        });
 
-        binding.location.setAdapter(SpinnersAdapters.setLocationSpinner(getContext()));
+
 
         binding.clothKind.setAdapter(SpinnersAdapters.setClothKindsSpinner(getContext()));
 
@@ -111,7 +126,7 @@ public class CategoryFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (validateInput()) {
-                                Model.instance().getPostsByCategory(clothKind,color,(data)->{
+                                Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
                                     viewModel.setData(data);
                                     adapter.setData(data);
                                 });
@@ -128,19 +143,29 @@ public class CategoryFragment extends Fragment {
     }
 
     public void makeAToast(String text){
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(getContext())
+                .setTitle("Invalid Input")
+                .setMessage(text)
+                .setPositiveButton("Ok", (dialog,which)->{
+                })
+                .create().show();
     }
     public boolean validateInput(){
-        if (Objects.equals(clothKind, "Kind")) {
-            makeAToast("Please choose a the kind of cloth");
-            return false;
-        }
-        else if (Objects.equals(color, "Color")) {
+        if (Objects.equals(color, "Color")) {
             makeAToast("Please choose a color");
             return false;
         }
+        else if (Objects.equals(clothKind, "Kind")) {
+            makeAToast("Please choose a the kind of cloth");
+            return false;
+        }
+
+
+
 
 
         return true;
     }
+
+
 }

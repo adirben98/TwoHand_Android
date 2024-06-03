@@ -8,8 +8,26 @@ import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.User;
 
 public class UserViewModel extends ViewModel {
-    static private LiveData<User> user=Model.instance().getLoggedUser();
-    static public LiveData<User> getUser() {
+    private static MutableLiveData<User> user;
+
+    public static LiveData<User> getUser() {
+        if (user == null) {
+            user = new MutableLiveData<>();
+            loadUser();
+        }
         return user;
+    }
+
+    private static void loadUser() {
+        Model.instance().getLoggedUser(new Model.Listener<User>() {
+            @Override
+            public void onComplete(User data) {
+                user.setValue(data);
+            }
+        });
+    }
+
+    public static void refreshUser() {
+        loadUser();
     }
 }

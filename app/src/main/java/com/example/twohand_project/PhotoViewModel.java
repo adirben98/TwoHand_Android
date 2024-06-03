@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import androidx.lifecycle.ViewModel;
 
-public class SharingPostViewModel extends ViewModel {
+public class PhotoViewModel extends ViewModel {
     private Bitmap bitmap;
     private Uri url;
 

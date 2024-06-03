@@ -1,5 +1,6 @@
 package com.example.twohand_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -29,7 +30,9 @@ FragmentLogInBinding binding;
                 String password=binding.PasswordEt.getText().toString();
                 Model.instance().logIn(username,password,(isSuccessful)->{
                     if (isSuccessful) {
-                        Navigation.findNavController(v).navigate(R.id.action_logInFragment_to_sharingPostFragment);
+                        Intent intent=new Intent(getActivity(), MainActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
 
                     }
                     else{

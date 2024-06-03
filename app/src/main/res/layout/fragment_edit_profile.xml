@@ -7,57 +7,61 @@
     android:background="#53F1AF"
     tools:context=".EditProfileFragment">
 
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="128dp"
-        android:layout_height="145dp"
-        android:src="@drawable/logo"
+    <TextView
+        android:id="@+id/username_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="53dp"
+        android:text="Username"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="202dp"
         android:layout_height="163dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/username_tv" />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="344dp"
-        android:layout_marginEnd="41dp"
-        android:src="@drawable/ic_baseline_image_search_24"
-        app:layout_constraintEnd_toStartOf="@+id/avatar"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/camera_btn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="26dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_baseline_photo_camera_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gallery"
+        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <ImageButton
+        android:id="@+id/gallery"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="26dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_baseline_image_search_24"
+        app:layout_constraintEnd_toStartOf="@+id/camera_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatar" />
+
+    <Spinner
         android:id="@+id/location_spinner"
         android:layout_width="315dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:hint="Location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/number_et" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/password_et"
-        android:layout_width="315dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:hint="Password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_spinner" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/number_et"
@@ -67,7 +71,7 @@
         android:hint="Number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/camera_btn" />
 
     <Button
         android:id="@+id/Edit_btn"
@@ -79,7 +83,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_spinner" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,16 +9,20 @@
     <fragment
         android:id="@+id/feedListFragment"
         android:name="com.example.twohand_project.FeedListFragment"
-        android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" >
+        android:label=""
+        tools:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/action_feedListFragment_to_postFragment"
             app:destination="@id/postFragment" />
+        <action
+            android:id="@+id/action_feedListFragment_to_otherUserProfileFragment"
+            app:destination="@id/otherUserProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/postFragment"
         android:name="com.example.twohand_project.PostFragment"
-        android:label="PostFragment" >
+        android:label=""
+        tools:layout="@layout/fragment_post">
         <argument
             android:name="id"
             app:argType="string" />
@@ -29,7 +33,7 @@
     <fragment
         android:id="@+id/sharingPostFragment"
         android:name="com.example.twohand_project.SharingPostFragment"
-        android:label="fragment_sharing_post"
+        android:label=""
         tools:layout="@layout/fragment_sharing_post" >
         <action
             android:id="@+id/action_sharingPostFragment_to_feedListFragment"
@@ -38,74 +42,55 @@
     <fragment
         android:id="@+id/editPostFragment"
         android:name="com.example.twohand_project.EditPostFragment"
-        android:label="fragment_edit_post"
+        android:label=""
         tools:layout="@layout/fragment_edit_post" >
         <argument
             android:name="id"
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/startFragment"
-        android:name="com.example.twohand_project.StartFragment"
-        android:label="fragment_start"
-        tools:layout="@layout/fragment_start" >
-        <action
-            android:id="@+id/action_startFragment_to_logInFragment"
-            app:destination="@id/logInFragment" />
-        <action
-            android:id="@+id/action_startFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/logInFragment"
-        android:name="com.example.twohand_project.LogInFragment"
-        android:label="fragment_log_in"
-        tools:layout="@layout/fragment_log_in" >
-        <action
-            android:id="@+id/action_logInFragment_to_feedListFragment"
-            app:destination="@id/feedListFragment" />
-        <action
-            android:id="@+id/action_logInFragment_to_sharingPostFragment"
-            app:destination="@id/sharingPostFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.example.twohand_project.RegisterFragment"
-        android:label="RegisterFragment" >
-        <action
-            android:id="@+id/action_registerFragment_to_feedListFragment"
-            app:destination="@id/feedListFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.twohand_project.ProfileFragment"
-        android:label="fragment_profile"
+        android:label=""
         tools:layout="@layout/fragment_profile" >
+
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/editProfileFragment"
-        android:name="com.example.twohand_project.EditProfileFragment"
-        android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_profileFragment_to_postFragment"
+            app:destination="@id/postFragment" />
         <argument
             android:name="username"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.example.twohand_project.CategoryFragment"
-        android:label="fragment_category"
+        android:label=""
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.twohand_project.FavoritesFragment"
-        android:label="FavoritesFragment" />
+        android:label=""
+        tools:layout="@layout/fragment_favorites"/>
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.twohand_project.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.twohand_project.EditProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/otherUserProfileFragment"
+        android:name="com.example.twohand_project.OtherUserProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_other_user_profile">
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_otherUserProfileFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+
 </navigation>

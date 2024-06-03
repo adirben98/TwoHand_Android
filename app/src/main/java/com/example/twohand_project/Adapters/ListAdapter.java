@@ -51,12 +51,12 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.addToFavoriteBtn=itemView.findViewById(R.id.likeBtn);
     }
 
-    public void bind(User user,Post post,OnItemClickListener listener,Context context) {
+    public void bind(User user,Post post,OnItemClickListener onPhotoClickListener,OnItemClickListener onUsernameClickListener,Context context) {
         this.owner.setText(post.owner);
         Picasso.get().load(post.ownerImg).into(this.ownerImg);
         this.description.setText(post.description);
         this.location.setText(post.location);
-        this.price.setText(post.price);
+        this.price.setText(post.price+"$");
         Picasso.get().load(post.postImg).into(this.postImg);
         if(!post.sold){
             this.sold.setVisibility(View.GONE);
@@ -92,8 +92,9 @@ class ViewHolder extends RecyclerView.ViewHolder{
             }
         });
         this.postImg.setOnClickListener((view)->{
-            listener.onClick(getAdapterPosition());
+            onPhotoClickListener.onClick(getAdapterPosition());
         });
+        this.owner.setOnClickListener(view->onUsernameClickListener.onClick(getAdapterPosition()));
 
 
     }
@@ -103,12 +104,17 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
     List<Post> data;
     LayoutInflater inflater;
 
-    OnItemClickListener listener;
+    OnItemClickListener onPhotoClickListener;
+    OnItemClickListener onUsernameClickListener;
+
     Context context;
     User user;
 
-    public void SetItemClickListener(OnItemClickListener listener){
-        this.listener=listener;
+    public void SetOnPhotoClickListener(OnItemClickListener onPhotoClickListener){
+        this.onPhotoClickListener=onPhotoClickListener;
+    }
+    public void SetOnUsernameClickListener(OnItemClickListener onUsernameClickListener){
+        this.onUsernameClickListener=onUsernameClickListener;
     }
 
 
@@ -129,7 +135,7 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post=data.get(position);
-        holder.bind(user,post,listener,context);
+        holder.bind(user,post,onPhotoClickListener,onUsernameClickListener,context);
 
     }
 
