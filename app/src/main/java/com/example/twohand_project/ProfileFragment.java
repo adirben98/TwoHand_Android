@@ -29,16 +29,18 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
     User user;
-    User myUser;
     ProfileViewModel viewModel;
     View view;
     ProfileListAdapter adapter;
+    UserViewModel userViewModel;
 
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         viewModel=new ViewModelProvider(this).get(ProfileViewModel.class);
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
+
 
     }
 
@@ -60,7 +62,7 @@ public class ProfileFragment extends Fragment {
         });
         binding.recyclerList.setAdapter(adapter);
 
-        UserViewModel.getUser().observe(getViewLifecycleOwner(),newUser->{
+        userViewModel.getUser().observe(getViewLifecycleOwner(),newUser->{
             user=newUser;
             setProfile();
                 }
@@ -72,7 +74,11 @@ public class ProfileFragment extends Fragment {
         binding.usernameTextView.setText(user.username);
         binding.locationTextView.setText(user.location);
         binding.numberTv.setText(user.number);
-        Picasso.get().load(user.userImg).into(binding.avatarImageView);
+        if(!user.userImg.equals(""))
+            Picasso.get().load(user.userImg).into(binding.avatarImageView);
+        else{
+            binding.avatarImageView.setImageResource(R.drawable.avatar);
+        }
 
         Model.instance().getUserPosts(user.username, (posts) -> {
             viewModel.setData(posts);
@@ -80,7 +86,7 @@ public class ProfileFragment extends Fragment {
         });
 
             binding.editButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_profileFragment_to_editProfileFragment));
-            binding.logoutTv.setOnClickListener(new View.OnClickListener() {
+            binding.logOutTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new AlertDialog.Builder(getContext())

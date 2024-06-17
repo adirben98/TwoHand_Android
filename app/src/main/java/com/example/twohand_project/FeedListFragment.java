@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.twohand_project.Adapters.ListAdapter;
 import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.Model.Post;
+import com.example.twohand_project.Model.User;
 import com.example.twohand_project.databinding.FragmentFeedListBinding;
 
 import java.util.Objects;
@@ -28,7 +29,15 @@ public class FeedListFragment extends Fragment {
 
     FragmentFeedListBinding binding;
     FeedListViewModel viewModel;
+    UserViewModel userViewModel;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
+
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +60,8 @@ public class FeedListFragment extends Fragment {
 
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
-        UserViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
+        userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
+            User user1=user;
             adapter = new ListAdapter(user,viewModel.getList().getValue(), getLayoutInflater(),getContext());
             binding.recyclerList.setAdapter(adapter);
             viewModel.getList().observe(getViewLifecycleOwner(),list->{

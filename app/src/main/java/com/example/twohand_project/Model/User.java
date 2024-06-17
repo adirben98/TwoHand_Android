@@ -1,15 +1,24 @@
 package com.example.twohand_project.Model;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.twohand_project.MyApplication;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Entity
+@TypeConverters(ListConverter.class)
 public class User {
-
+    @PrimaryKey
+    @NonNull
     public String email;
     public String username;
 
@@ -17,6 +26,11 @@ public class User {
     public String location;
     public String number;
     public List<String> favorites;
+
+
+
+    public Long lastUpdated;
+
 
     public User( String username,String email, String userImg, String location, String number, List<String> favorites) {
         this.email = email;
@@ -27,6 +41,15 @@ public class User {
         this.favorites = favorites;
     }
     public User(){}
+
+    static void setUserlastUpdate(Long localLastUpdated){
+        MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).edit().putLong("USER_Last_Update",localLastUpdated).commit();
+    }
+    static Long getUserlastUpdate(){
+
+        long time = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("USER_Last_Update", 0);
+        return time;
+    }
 
     @NonNull
     public String getUsername() {
@@ -76,6 +99,13 @@ public class User {
     public void setFavorites(List<String> favorites) {
         this.favorites = favorites;
     }
+    public Long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 
     public static User fromJson(Map<String, Object> data) {
         String username=(String)data.get("username");
@@ -84,7 +114,11 @@ public class User {
         String location=(String)data.get("location");
         String number=(String) data.get("number");
         List<String> favorites=(List<String>) data.get("favorites");
-        return new User(username,email,userImg,location,number,favorites);
+        User user=new User(username,email,userImg,location,number,favorites);
+        Timestamp ts=(Timestamp)data.get("lastUpdated");
+        assert ts != null;
+        user.setLastUpdated(ts.getSeconds());
+        return user;
     }
     public static Map<String, Object> toJson(User user){
         Map<String, Object> json=new HashMap<>();
@@ -94,6 +128,8 @@ public class User {
         json.put("location",user.location);
         json.put("number",user.number);
         json.put("favorites",user.favorites);
+        json.put("lastUpdated", FieldValue.serverTimestamp());
+
 
         return json;
 

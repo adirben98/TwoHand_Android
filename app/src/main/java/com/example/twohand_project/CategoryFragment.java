@@ -47,13 +47,14 @@ public class CategoryFragment extends Fragment {
     Spinner clothKindSpinner;
     RecyclerView list;
     CategoryViewModel viewModel;
-
+    UserViewModel userViewModel;
     FragmentCategoryBinding binding;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         viewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
 
 
     }
@@ -113,7 +114,7 @@ public class CategoryFragment extends Fragment {
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        UserViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
+        userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
             ListAdapter adapter = new ListAdapter(user,viewModel.getData(), getLayoutInflater(),getContext());
             list.setAdapter(adapter);
 

@@ -28,6 +28,14 @@ import java.util.Objects;
 public class PostFragment extends Fragment {
 
     FragmentPostBinding binding;
+    UserViewModel userViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +62,7 @@ public class PostFragment extends Fragment {
                 startActivity(intent);
             });
 
-            User user=UserViewModel.getUser().getValue();
+            User user=userViewModel.getUser().getValue();
                 if (user != null) {
                     ImageButton addToFavoriteBtn = binding.favoriteBtn;
                     if (user.favorites.contains(post.id)) {
@@ -75,9 +83,12 @@ public class PostFragment extends Fragment {
 
                     if (Objects.equals(post.owner, user.username)) {
                         binding.editBtn.setVisibility(View.VISIBLE);
+                        binding.deleteBtn.setVisibility(View.VISIBLE);
                         binding.editBtn.setOnClickListener(Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostFragmentToEditPostFragment(id)));
                     } else {
                         binding.editBtn.setVisibility(View.GONE);
+                        binding.deleteBtn.setVisibility(View.GONE);
+
                     }
                     binding.deleteBtn.setOnClickListener((v)->{
                         new AlertDialog.Builder(getContext())

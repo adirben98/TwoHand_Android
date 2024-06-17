@@ -37,11 +37,13 @@ public class EditProfileFragment extends Fragment {
     ActivityResultLauncher<Void> cameraAppLauncher;
     ActivityResultLauncher<String> galleryAppLauncher;
     boolean photoSelected =false;
+    UserViewModel userViewModel;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
 
         cameraAppLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
             @Override
@@ -84,12 +86,15 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        UserViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
+         userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
 
             binding.usernameTv.setText(user.username);
-            Picasso.get().load(user.userImg).into(binding.avatar);
+             if(!user.userImg.equals(""))
+                 Picasso.get().load(user.userImg).into(binding.avatar);
+             else{
+                 binding.avatar.setImageResource(R.drawable.avatar);
+             }
             binding.numberEt.setText(user.number);
-            String number=binding.numberEt.getText().toString();
             SpinnersAdapters.setLocationSpinner(user.location,getContext(),adapter->binding.locationSpinner.setAdapter(adapter));
             binding.locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -105,7 +110,9 @@ public class EditProfileFragment extends Fragment {
             binding.EditBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (number.length() != 10 && !number.matches("\\d+")) {
+                    String number=binding.numberEt.getText().toString();
+
+                    if (number.matches("\\d+")) {
                         if (photoSelected) {
                             binding.avatar.setDrawingCacheEnabled(true);
                             binding.avatar.buildDrawingCache();
@@ -144,7 +151,6 @@ public class EditProfileFragment extends Fragment {
     }
     public void updateUserAndHisPosts(View v,User updatedUser){
         Model.instance().updateUserAndHisPosts(updatedUser, unused ->{
-                    UserViewModel.refreshUser();
                     Navigation.findNavController(v).popBackStack();
                 }
         );

@@ -46,9 +46,18 @@ public class Model {
 
     public static Model instance(){return _instance;}
 
+    private LiveData<User> user;
 
-    public void getLoggedUser(Listener<User> listener){
-        firebaseModel.getLoggedUser(listener);
+    public LiveData<User> getLoggedUser(){
+
+
+        refreshAllUsers();
+
+        if (user==null){
+            user=localDb.userDao().getUserByEmail(firebaseModel.getLoggedUserEmail());
+        }
+        return user;
+
     }
     private LiveData<List<Post>> postList;
     public LiveData<List<Post>> getAllPosts() {
@@ -57,6 +66,23 @@ public class Model {
             refreshAllPosts();
         }
         return postList;
+    }
+    public void refreshAllUsers(){
+        Long localLastUpdated= User.getUserlastUpdate();
+        firebaseModel.getAllUsersSince(localLastUpdated,(users)->{
+            executor.execute(()->{
+                Long time=localLastUpdated;
+                for (User user : users) {
+                    localDb.userDao().insert(user);
+                    if (user.lastUpdated > time) {
+                        time=user.lastUpdated;
+                    }
+                }
+                User.setUserlastUpdate(time);
+
+            });
+
+        });
     }
     public void refreshAllPosts(){
         EventFeedLoadingState.setValue(LoadingState.Loading);
@@ -141,14 +167,15 @@ public class Model {
 
 
     }
-    public void getFavoritesPosts(String username,Listener<List<Post>> listener){
+    public void getFavoritesPosts(List<String> favorites,Listener<List<Post>> listener){
+        refreshAllUsers();
         refreshAllPosts();
-            firebaseModel.getFavorites(username,(favorites)->{
+
                 executor.execute(()->{
                     List<Post> data=localDb.postDao().getFavorites(favorites);
                     mainHandler.post(()->{listener.onComplete(data);});
                 });
-            });
+
 
     }
 
@@ -223,9 +250,15 @@ public class Model {
 
     public void updateUserAndHisPosts(User user, Listener<Void> listener) {
         firebaseModel.updateUserAndHisPosts(user,listener);
+        refreshAllUsers();
     }
     public void register(User newUser,String password,Listener<Void> listener){
         firebaseModel.register(newUser,password,listener);
+        executor.execute(()->{
+            localDb.userDao().insert(newUser);
+
+        });
+
     }
 
     public void isEmailTaken(String email,Listener<Boolean> listener) {
@@ -249,7 +282,20 @@ public class Model {
     }
 
     public void logout() {
-        firebaseModel.logOut();
+
+
+        firebaseModel.logOut((unused)->{
+                refresh();
+        });
+
+    }
+    public void refresh(){
+        User newuser=new User("test","","","","",new ArrayList<>());
+
+        executor.execute(()->{
+            localDb.userDao().insert(newuser);
+            localDb.userDao().delete(newuser);
+        });
     }
 
 }

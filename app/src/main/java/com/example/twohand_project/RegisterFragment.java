@@ -28,6 +28,8 @@ import com.example.twohand_project.databinding.FragmentRegisterBinding;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RegisterFragment extends Fragment {
@@ -120,19 +122,31 @@ public class RegisterFragment extends Fragment {
 
 
                                 } else {
-                                    binding.avatar.setDrawingCacheEnabled(true);
-                                    binding.avatar.buildDrawingCache();
-                                    Bitmap bitmap = ((BitmapDrawable) binding.avatar.getDrawable()).getBitmap();
-                                    String id= UUID.randomUUID().toString();
-                                    Model.instance().uploadImage(id,bitmap,(url)->{
-                                        User newUser=new User(username,email,url,location,number.toString(), new ArrayList<>());
+                                    if (isPhotoSelected){
+                                        binding.avatar.setDrawingCacheEnabled(true);
+                                        binding.avatar.buildDrawingCache();
+                                        Bitmap bitmap = ((BitmapDrawable) binding.avatar.getDrawable()).getBitmap();
+                                        String id= UUID.randomUUID().toString();
+                                        Model.instance().uploadImage(id,bitmap,(url)->{
+                                            User newUser=new User(username,email,url,location,number.toString(), new ArrayList<>());
+                                            Model.instance().register(newUser,password,(unused)->{
+                                                Intent intent=new Intent(getActivity(), MainActivity.class);
+                                                startActivity(intent);
+                                                getActivity().finish();
+
+                                            });
+                                        });
+                                    }
+                                    else{
+                                        User newUser=new User(username,email,"",location,number.toString(), new ArrayList<>());
                                         Model.instance().register(newUser,password,(unused)->{
                                             Intent intent=new Intent(getActivity(), MainActivity.class);
                                             startActivity(intent);
                                             getActivity().finish();
 
                                         });
-                                    });
+                                    }
+
                                 }
                             });
                         }
@@ -144,6 +158,14 @@ public class RegisterFragment extends Fragment {
 
         return view;
     }
+    public boolean isEmailvalid(String email){
+        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+
     public void makeAToast(String text){
         new AlertDialog.Builder(getContext())
                 .setTitle("Invalid Input")
@@ -155,8 +177,9 @@ public class RegisterFragment extends Fragment {
 
     public boolean validateInput(){
 
-        if (Objects.equals(email, "")) {
-            makeAToast("Please enter an email");
+
+        if (!isEmailvalid(email)){
+            makeAToast("Please enter a valid email");
             return false;
         }
         else if (Objects.equals(username, "")) {

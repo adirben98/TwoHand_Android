@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +52,21 @@ public class FirebaseModel {
         storage= FirebaseStorage.getInstance();
         mAuth=FirebaseAuth.getInstance();
     };
+    public void getAllUsersSince(Long since, Model.Listener<List<User>> callback) {
+        db.collection("User").whereGreaterThan("lastUpdated",new Timestamp(since,0)).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            List<User> data=new ArrayList<>();
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for ( DocumentSnapshot document:task.getResult()){
+                        data.add(User.fromJson(document.getData()));
+                    }
+                    callback.onComplete(data);
+                }
+
+            }
+        });
+    }
     public void getAllPostsSince(Long since,Model.Listener<List<Post>> callback) {
         db.collection("Post").whereGreaterThan("lastUpdated",new Timestamp(since,0)).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             List<Post> data=new ArrayList<>();
@@ -141,6 +154,8 @@ public class FirebaseModel {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 User user=User.fromJson(task.getResult().getDocuments().get(0).getData());
+
+
                 listener.onComplete(user);
             }
         });
@@ -156,7 +171,16 @@ public class FirebaseModel {
                         .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                listener.onComplete(null);
+                                Model.instance().refreshAllUsers();
+
+                                mAuth.signInWithEmailAndPassword(newUser.email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful())
+                                            listener.onComplete(null);
+
+                                    }
+                                });
                             }
                         });
 
@@ -239,7 +263,7 @@ public class FirebaseModel {
 
                                 batch.commit().addOnCompleteListener(batchTask -> {
                                     if (batchTask.isSuccessful()) {
-                                        Model.instance().refreshAllPosts();
+                                        Model.instance().refreshAllUsers();
                                         listener.onComplete(null);
                                         Log.d("TAG", "Batch update successful.");
                                     } else {
@@ -266,7 +290,16 @@ public class FirebaseModel {
         });
     }
 
-    public void logOut() {
+    public void logOut(Model.Listener<Void> listener) {
         mAuth.signOut();
+        listener.onComplete(null);
     }
+
+    public String getLoggedUserEmail() {
+
+        return mAuth.getCurrentUser().getEmail();
+    }
+
+
+
 }

@@ -21,6 +21,7 @@ import com.example.twohand_project.databinding.FragmentFavoritesBinding;
 public class FavoritesFragment extends Fragment {
 FragmentFavoritesBinding binding;
 FavoriteViewModel viewModel;
+UserViewModel userViewModel;
 
 
     @Override
@@ -36,11 +37,11 @@ FavoriteViewModel viewModel;
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        UserViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
+        userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
             ListAdapter adapter = new ListAdapter(user,viewModel.getFavorites(), getLayoutInflater(), getContext());
             list.setAdapter(adapter);
 
-            Model.instance().getFavoritesPosts(user.username,(posts)->{
+            Model.instance().getFavoritesPosts(user.favorites,(posts)->{
                 viewModel.setFavorites(posts);
                 adapter.setData(posts);
 

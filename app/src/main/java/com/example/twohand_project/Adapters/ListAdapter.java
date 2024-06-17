@@ -57,6 +57,7 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.description.setText(post.description);
         this.location.setText(post.location);
         this.price.setText(post.price+"$");
+
         Picasso.get().load(post.postImg).into(this.postImg);
         if(!post.sold){
             this.sold.setVisibility(View.GONE);

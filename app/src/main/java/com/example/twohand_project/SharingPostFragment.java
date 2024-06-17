@@ -44,12 +44,16 @@ public class SharingPostFragment extends Fragment {
     FragmentSharingPostBinding binding;
     Boolean isPhotoSelected = false;
     PhotoViewModel viewModel;
+    UserViewModel userViewModel;
 
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
+
+
         cameraAppLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
             @Override
             public void onActivityResult(Bitmap o) {
@@ -84,7 +88,7 @@ public class SharingPostFragment extends Fragment {
         if (viewModel.getUrl()!=null)
             binding.postImage.setImageURI(viewModel.getUrl());
 
-        UserViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User newUser) {
                 user = newUser;
