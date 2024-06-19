@@ -30,6 +30,8 @@ public class Model {
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     final public MutableLiveData<LoadingState> EventFeedLoadingState=new MutableLiveData<>(LoadingState.Not_Loading);
 
+
+
     public enum LoadingState{
         Loading,
         Not_Loading
@@ -50,19 +52,22 @@ public class Model {
 
     public LiveData<User> getLoggedUser(){
 
-
-        refreshAllUsers();
+        String email=firebaseModel.getLoggedUserEmail();
 
         if (user==null){
-            user=localDb.userDao().getUserByEmail(firebaseModel.getLoggedUserEmail());
+            user=localDb.userDao().getUserByEmail(email);
+            refreshAllUsers();
+
         }
+
         return user;
 
     }
     private LiveData<List<Post>> postList;
-    public LiveData<List<Post>> getAllPosts() {
+    public LiveData<List<Post>> getAllPosts(String username) {
         if(postList == null){
-            postList = localDb.postDao().getAll();
+
+            postList = localDb.postDao().getAllWithoutUser(username);
             refreshAllPosts();
         }
         return postList;
@@ -253,11 +258,14 @@ public class Model {
         refreshAllUsers();
     }
     public void register(User newUser,String password,Listener<Void> listener){
-        firebaseModel.register(newUser,password,listener);
-        executor.execute(()->{
-            localDb.userDao().insert(newUser);
+        listener.onComplete(null);
+        firebaseModel.register(newUser,password);
+//        executor.execute(()->{
+//            localDb.userDao().insert(newUser);
+//
+//        });
+        refreshAllUsers();
 
-        });
 
     }
 
@@ -282,20 +290,9 @@ public class Model {
     }
 
     public void logout() {
-
-
-        firebaseModel.logOut((unused)->{
-                refresh();
-        });
-
+        firebaseModel.logOut();
+        user=null;
     }
-    public void refresh(){
-        User newuser=new User("test","","","","",new ArrayList<>());
 
-        executor.execute(()->{
-            localDb.userDao().insert(newuser);
-            localDb.userDao().delete(newuser);
-        });
-    }
 
 }

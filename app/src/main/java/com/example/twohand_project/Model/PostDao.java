@@ -13,8 +13,8 @@ import java.util.List;
 
 @Dao
 public interface PostDao {
-    @Query("select * from Post")
-    LiveData<List<Post>> getAll();
+    @Query("select * from Post where owner != :username")
+    LiveData<List<Post>> getAllWithoutUser(String username);
 
     @Query("select * from Post where owner=:username")
     List<Post> getUserPosts(String username);

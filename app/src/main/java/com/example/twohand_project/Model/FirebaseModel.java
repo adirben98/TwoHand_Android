@@ -163,7 +163,7 @@ public class FirebaseModel {
 
     }
 
-    public void register(User newUser,String password,Model.Listener<Void> listener){
+    public void register(User newUser,String password){
         db.collection("User").document(newUser.username).set(User.toJson(newUser)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -171,13 +171,12 @@ public class FirebaseModel {
                         .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Model.instance().refreshAllUsers();
+
 
                                 mAuth.signInWithEmailAndPassword(newUser.email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful())
-                                            listener.onComplete(null);
+
 
                                     }
                                 });
@@ -223,6 +222,7 @@ public class FirebaseModel {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        Model.instance().refreshAllUsers();
                     }
                 });
 
@@ -263,7 +263,6 @@ public class FirebaseModel {
 
                                 batch.commit().addOnCompleteListener(batchTask -> {
                                     if (batchTask.isSuccessful()) {
-                                        Model.instance().refreshAllUsers();
                                         listener.onComplete(null);
                                         Log.d("TAG", "Batch update successful.");
                                     } else {
@@ -290,9 +289,8 @@ public class FirebaseModel {
         });
     }
 
-    public void logOut(Model.Listener<Void> listener) {
+    public void logOut() {
         mAuth.signOut();
-        listener.onComplete(null);
     }
 
     public String getLoggedUserEmail() {

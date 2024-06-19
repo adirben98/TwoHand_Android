@@ -122,7 +122,6 @@ public class CategoryFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                                 Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
-                                    data=data.stream().filter(post->!Objects.equals(post.owner,user.username)).collect(Collectors.toList());
                                     viewModel.setData(data);
                                     adapter.setData(data);
                                 });

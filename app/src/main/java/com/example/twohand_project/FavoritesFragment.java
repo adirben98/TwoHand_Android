@@ -29,7 +29,7 @@ UserViewModel userViewModel;
                              Bundle savedInstanceState) {
         binding=FragmentFavoritesBinding.inflate(inflater,container,false);
         viewModel=new ViewModelProvider(this).get(FavoriteViewModel.class);
-
+        userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
 
 
         RecyclerView list=binding.list;

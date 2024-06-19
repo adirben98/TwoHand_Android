@@ -23,6 +23,7 @@ import com.example.twohand_project.R;
 import com.example.twohand_project.UserViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class ViewHolder extends RecyclerView.ViewHolder{
@@ -70,13 +71,19 @@ class ViewHolder extends RecyclerView.ViewHolder{
         this.addToFavoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<String> mutableFavorites = new ArrayList<>(user.getFavorites());
+
                 if (!user.favorites.contains(post.id)) {
-                    user.favorites.add(post.id);
+                    mutableFavorites.add(post.id);
+                    user.setFavorites(mutableFavorites);
+
                     Model.instance().updateFavorites(user);
                     addToFavoriteBtn.setImageResource(R.drawable.red_heart);
                 }
                 else{
-                    user.favorites.remove(post.id);
+                    mutableFavorites.remove(post.id);
+                    user.setFavorites(mutableFavorites);
+
                     Model.instance().updateFavorites(user);
                     addToFavoriteBtn.setImageResource(R.drawable.heart);
                 }

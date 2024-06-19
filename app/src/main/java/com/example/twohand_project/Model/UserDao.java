@@ -13,7 +13,5 @@ public interface UserDao {
 
     @Query("select * from User where email=:email")
     LiveData<User> getUserByEmail(String email);
-    @Delete
-    void delete(User user);
 
 }

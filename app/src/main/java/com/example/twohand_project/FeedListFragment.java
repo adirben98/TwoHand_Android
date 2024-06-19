@@ -61,24 +61,27 @@ public class FeedListFragment extends Fragment {
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
         userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
-            User user1=user;
-            adapter = new ListAdapter(user,viewModel.getList().getValue(), getLayoutInflater(),getContext());
-            binding.recyclerList.setAdapter(adapter);
-            viewModel.getList().observe(getViewLifecycleOwner(),list->{
-                list=list.stream().filter(post-> !Objects.equals(post.owner, user.username)).collect(Collectors.toList());
-                adapter.setData(list);
-            });
-            adapter.SetOnPhotoClickListener(pos -> {
-                Post post=viewModel.getList().getValue().get(pos);
-                FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
-                Navigation.findNavController(view).navigate(action);
+            if (user!=null){
 
-            });
-            adapter.SetOnUsernameClickListener(pos->{
-                Post post=viewModel.getList().getValue().get(pos);
-                FeedListFragmentDirections.ActionFeedListFragmentToOtherUserProfileFragment action = FeedListFragmentDirections.actionFeedListFragmentToOtherUserProfileFragment(post.owner);
-                Navigation.findNavController(view).navigate(action);
-            });
+                String username=user.username;
+                binding.recyclerList.setAdapter(adapter);
+                viewModel.getList(username).observe(getViewLifecycleOwner(),list->{
+                    adapter = new ListAdapter(user,list, getLayoutInflater(),getContext());
+                    adapter.setData(list);
+                    adapter.SetOnPhotoClickListener(pos -> {
+                        Post post=list.get(pos);
+                        FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
+                        Navigation.findNavController(view).navigate(action);
+
+                    });
+                    adapter.SetOnUsernameClickListener(pos->{
+                        Post post=list.get(pos);
+                        FeedListFragmentDirections.ActionFeedListFragmentToOtherUserProfileFragment action = FeedListFragmentDirections.actionFeedListFragmentToOtherUserProfileFragment(post.owner);
+                        Navigation.findNavController(view).navigate(action);
+                    });
+                });
+
+            }
         });
 
 

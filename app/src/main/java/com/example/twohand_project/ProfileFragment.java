@@ -63,9 +63,11 @@ public class ProfileFragment extends Fragment {
         binding.recyclerList.setAdapter(adapter);
 
         userViewModel.getUser().observe(getViewLifecycleOwner(),newUser->{
-            user=newUser;
-            setProfile();
-                }
+            if (newUser!=null) {
+                user = newUser;
+                setProfile();
+            }
+        }
         );
 
         return view;

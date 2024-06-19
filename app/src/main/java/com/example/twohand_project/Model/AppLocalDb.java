@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.twohand_project.MyApplication;
 
-@Database(entities = {Post.class, User.class}, version =27)
+@Database(entities = {Post.class, User.class}, version =29)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PostDao postDao();
     public abstract UserDao userDao();

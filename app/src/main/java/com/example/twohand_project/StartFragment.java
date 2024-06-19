@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.twohand_project.Model.Model;
 import com.example.twohand_project.databinding.FragmentStartBinding;
 
 
