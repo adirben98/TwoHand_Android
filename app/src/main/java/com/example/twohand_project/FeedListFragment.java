@@ -63,11 +63,12 @@ public class FeedListFragment extends Fragment {
         userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
             if (user!=null){
 
-                String username=user.username;
-                binding.recyclerList.setAdapter(adapter);
-                viewModel.getList(username).observe(getViewLifecycleOwner(),list->{
+
+                viewModel.getList().observe(getViewLifecycleOwner(),list->{
                     adapter = new ListAdapter(user,list, getLayoutInflater(),getContext());
-                    adapter.setData(list);
+                    binding.recyclerList.setAdapter(adapter);
+
+
                     adapter.SetOnPhotoClickListener(pos -> {
                         Post post=list.get(pos);
                         FeedListFragmentDirections.ActionFeedListFragmentToPostFragment action = FeedListFragmentDirections.actionFeedListFragmentToPostFragment(post.id);
@@ -83,12 +84,6 @@ public class FeedListFragment extends Fragment {
 
             }
         });
-
-
-
-
-
-
         return view;
     }
 

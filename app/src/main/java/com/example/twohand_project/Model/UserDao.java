@@ -11,7 +11,7 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User user);
 
-    @Query("select * from User where email=:email")
-    LiveData<User> getUserByEmail(String email);
+    @Query("select * from User where username=:username")
+    LiveData<User> getUserByUsername(String username);
 
 }

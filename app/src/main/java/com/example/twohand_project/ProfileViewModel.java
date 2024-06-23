@@ -1,5 +1,6 @@
 package com.example.twohand_project;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.twohand_project.Model.Model;
@@ -8,13 +9,12 @@ import com.example.twohand_project.Model.Post;
 import java.util.List;
 
 public class ProfileViewModel extends ViewModel {
-    private List<Post> data;
+    private LiveData<List<Post>> data;
 
-    public List<Post> getData() {
+    public LiveData<List<Post>> getData(String username) {
+        data=Model.instance().getUserPosts(username);
         return data;
     }
 
-    public void setData(List<Post> data) {
-        this.data = data;
-    }
+
 }

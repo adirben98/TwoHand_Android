@@ -108,7 +108,7 @@ public class EditPostFragment extends Fragment {
 
 
         String id=EditPostFragmentArgs.fromBundle(getArguments()).getId();
-        Model.instance().getPostById(id,(post)->{
+        Model.instance().getPostById(id).observe(getViewLifecycleOwner(),(post)->{
             Picasso.get().load(Uri.parse(post.postImg)).into(binding.postImg);
             binding.descriptionEt.setText(post.description);
             binding.priceEt.setText(post.price);
@@ -122,7 +122,7 @@ public class EditPostFragment extends Fragment {
                 if (post.price.equals("---")) {
                     post.price="0";
                 }
-                if (!post.price.matches("\\d+")) {
+                if (post.price.matches("\\d+")) {
                     if (Objects.equals(post.price, "0"))
                         post.price = "---";
                     post.description = binding.descriptionEt.getText().toString();

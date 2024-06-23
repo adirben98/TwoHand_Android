@@ -23,6 +23,8 @@ import com.example.twohand_project.Model.User;
 import com.example.twohand_project.databinding.FragmentPostBinding;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PostFragment extends Fragment {
@@ -45,15 +47,25 @@ public class PostFragment extends Fragment {
 
 
 
-        Model.instance().getPostById(id, (post) -> {
+        Model.instance().getPostById(id).observe(getViewLifecycleOwner(), (post) -> {
             binding.Username.setText(post.owner);
             Picasso.get().load(post.postImg).into(binding.postImage);
-            Picasso.get().load(post.ownerImg).into(binding.userImage);
+            if (Objects.equals(post.ownerImg, "")) {
+                binding.userImage.setImageResource(R.drawable.avatar);
+            }
+            else{
+                Picasso.get().load(post.ownerImg).into(binding.userImage);
+
+            }
             binding.Description.setText(post.description);
             binding.Price.setText(post.price+"$");
 
             if (!post.sold) {
                 binding.sold.setVisibility(View.GONE);
+            }
+            else{
+                binding.sold.setVisibility(View.VISIBLE);
+
             }
 
             binding.ringingPhone.setOnClickListener(v -> {
@@ -62,41 +74,60 @@ public class PostFragment extends Fragment {
                 startActivity(intent);
             });
 
-            User user=userViewModel.getUser().getValue();
+            userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
                 if (user != null) {
-                    ImageButton addToFavoriteBtn = binding.favoriteBtn;
-                    if (user.favorites.contains(post.id)) {
-                        addToFavoriteBtn.setImageResource(R.drawable.red_heart);
-                    }
-
-                    addToFavoriteBtn.setOnClickListener(v -> {
-                        if (!user.favorites.contains(post.id)) {
-                            user.favorites.add(post.id);
-                            Model.instance().updateFavorites(user);
-                            addToFavoriteBtn.setImageResource(R.drawable.red_heart);
-                        } else {
-                            user.favorites.remove(post.id);
-                            Model.instance().updateFavorites(user);
-                            addToFavoriteBtn.setImageResource(R.drawable.heart);
-                        }
-                    });
 
                     if (Objects.equals(post.owner, user.username)) {
+
+
+
+                        binding.ringingPhone.setVisibility(View.GONE);
+                        binding.favoriteBtn.setVisibility(View.GONE);
                         binding.editBtn.setVisibility(View.VISIBLE);
                         binding.deleteBtn.setVisibility(View.VISIBLE);
                         binding.editBtn.setOnClickListener(Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostFragmentToEditPostFragment(id)));
                     } else {
+                        binding.favoriteBtn.setVisibility(View.VISIBLE);
+                        binding.ringingPhone.setVisibility(View.VISIBLE);
                         binding.editBtn.setVisibility(View.GONE);
                         binding.deleteBtn.setVisibility(View.GONE);
+                        ImageButton addToFavoriteBtn = binding.favoriteBtn;
+                        if (user.favorites.contains(post.id)) {
+                            addToFavoriteBtn.setImageResource(R.drawable.red_heart);
+                        }
+
+                        addToFavoriteBtn.setOnClickListener(v -> {
+                            List<String> mutableFavorites = new ArrayList<>(user.getFavorites());
+
+                            if (!user.favorites.contains(post.id)) {
+                                mutableFavorites.add(post.id);
+                                user.setFavorites(mutableFavorites);
+
+                                Model.instance().updateFavorites(user);
+                                addToFavoriteBtn.setImageResource(R.drawable.red_heart);
+                            }
+                            else{
+                                mutableFavorites.remove(post.id);
+                                user.setFavorites(mutableFavorites);
+
+                                Model.instance().updateFavorites(user);
+                                addToFavoriteBtn.setImageResource(R.drawable.heart);
+                            }
+                        });
+
 
                     }
+
+
+
+
                     binding.deleteBtn.setOnClickListener((v)->{
                         new AlertDialog.Builder(getContext())
                                 .setTitle("Warning!")
                                 .setMessage("Are you sure you want to delete the post? ")
                                 .setPositiveButton("yes", (dialog,which)->{
-                                        Model.instance().deletePost(post,(unused)->{
-                                            Navigation.findNavController(v).popBackStack(R.id.feedListFragment,false);
+                                    Model.instance().deletePost(post,(unused)->{
+                                        Navigation.findNavController(v).popBackStack(R.id.profileFragment,false);
                                     });
                                 }).setNegativeButton("No",(dialog,which)->{})
                                 .create().show();
@@ -104,6 +135,9 @@ public class PostFragment extends Fragment {
                     });
 
                 }
+
+            });
+
             });
 
 

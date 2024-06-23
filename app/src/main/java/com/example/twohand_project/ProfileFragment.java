@@ -52,15 +52,7 @@ public class ProfileFragment extends Fragment {
 
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        adapter=new ProfileListAdapter(viewModel.getData(), getLayoutInflater());
-        adapter.SetItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onClick(int pos) {
-                ProfileFragmentDirections.ActionProfileFragmentToPostFragment action = ProfileFragmentDirections.actionProfileFragmentToPostFragment(viewModel.getData().get(pos).id);
-                Navigation.findNavController(view).navigate(action);
-            }
-        });
-        binding.recyclerList.setAdapter(adapter);
+
 
         userViewModel.getUser().observe(getViewLifecycleOwner(),newUser->{
             if (newUser!=null) {
@@ -82,9 +74,18 @@ public class ProfileFragment extends Fragment {
             binding.avatarImageView.setImageResource(R.drawable.avatar);
         }
 
-        Model.instance().getUserPosts(user.username, (posts) -> {
-            viewModel.setData(posts);
-            adapter.setData(posts);
+        viewModel.getData(user.username).observe(getViewLifecycleOwner(), (posts) -> {
+            adapter=new ProfileListAdapter(posts, getLayoutInflater());
+            binding.recyclerList.setAdapter(adapter);
+            adapter.SetItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onClick(int pos) {
+                    ProfileFragmentDirections.ActionProfileFragmentToPostFragment action = ProfileFragmentDirections.actionProfileFragmentToPostFragment(posts.get(pos).id);
+                    Navigation.findNavController(view).navigate(action);
+                }
+            });
+
+
         });
 
             binding.editButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_profileFragment_to_editProfileFragment));

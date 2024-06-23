@@ -20,6 +20,7 @@
             android:name=".RegisterLoginActivity"
             android:exported="false" />
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -14,6 +14,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -163,6 +164,7 @@ public class FirebaseModel {
 
     }
 
+
     public void register(User newUser,String password){
         db.collection("User").document(newUser.username).set(User.toJson(newUser)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -171,12 +173,15 @@ public class FirebaseModel {
                         .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+                                UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder().setDisplayName(newUser.username).build();
+                                mAuth.getCurrentUser().updateProfile(profile);
+                                Model.instance().username= newUser.username;
 
 
                                 mAuth.signInWithEmailAndPassword(newUser.email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-
+                                        Model.instance().refreshAllUsers();
 
                                     }
                                 });
@@ -208,21 +213,14 @@ public class FirebaseModel {
             }
         });
     }
-    public void getFavorites(String username,Model.Listener<List<String>> listener) {
-        db.collection("User").document(username).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                listener.onComplete(User.fromJson(documentSnapshot.getData()).favorites);
-            }
-        });
-    }
+
 
     public void updateFavorites(User user) {
         db.collection("User").document(user.username).update(User.toJson(user))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Model.instance().refreshAllUsers();
+
                     }
                 });
 
@@ -233,6 +231,7 @@ public class FirebaseModel {
         db.collection("Post").document(post.id).update(Post.toJson(post)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+                Model.instance().refreshAllPosts();
                 listener.onComplete(null);
             }
         });
@@ -246,6 +245,7 @@ public class FirebaseModel {
         String username = user.username;
         String newUserNumber = user.number;
         String newPhotoImg=user.userImg;
+        String location=user.location;
         db.collection("User").document(username).update(User.toJson(user)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -259,10 +259,12 @@ public class FirebaseModel {
                                     DocumentReference postRef = document.getReference();
                                     batch.update(postRef, "number", newUserNumber);
                                     batch.update(postRef,"ownerImg",newPhotoImg);
+                                    batch.update(postRef,"location",location);
                                 }
 
                                 batch.commit().addOnCompleteListener(batchTask -> {
                                     if (batchTask.isSuccessful()) {
+                                        Model.instance().refreshAllUsers();
                                         listener.onComplete(null);
                                         Log.d("TAG", "Batch update successful.");
                                     } else {
@@ -280,22 +282,16 @@ public class FirebaseModel {
 
     }
 
-    public void getUserByUsername(String username,Model.Listener<User> listener) {
-        db.collection("User").document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                listener.onComplete(User.fromJson(task.getResult().getData()));
-            }
-        });
-    }
+
 
     public void logOut() {
         mAuth.signOut();
     }
 
-    public String getLoggedUserEmail() {
+    public String getLoggedUserUsername() {
+        String username=mAuth.getCurrentUser().getDisplayName();
 
-        return mAuth.getCurrentUser().getEmail();
+        return username;
     }
 
 

@@ -30,16 +30,18 @@ UserViewModel userViewModel;
         binding=FragmentFavoritesBinding.inflate(inflater,container,false);
         viewModel=new ViewModelProvider(this).get(FavoriteViewModel.class);
         userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
+        View view=binding.getRoot();
 
 
-        RecyclerView list=binding.list;
-        list.setHasFixedSize(true);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        binding.list.setHasFixedSize(true);
+        binding.list.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
 
         userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
             ListAdapter adapter = new ListAdapter(user,viewModel.getFavorites(), getLayoutInflater(), getContext());
-            list.setAdapter(adapter);
+            binding.list.setAdapter(adapter);
 
             Model.instance().getFavoritesPosts(user.favorites,(posts)->{
                 viewModel.setFavorites(posts);
@@ -47,6 +49,6 @@ UserViewModel userViewModel;
 
             });
         });
-        return binding.getRoot();
+        return view;
     }
 }

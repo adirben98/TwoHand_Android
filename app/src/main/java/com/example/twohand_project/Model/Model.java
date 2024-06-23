@@ -30,7 +30,7 @@ public class Model {
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     final public MutableLiveData<LoadingState> EventFeedLoadingState=new MutableLiveData<>(LoadingState.Not_Loading);
 
-
+    public String username;
 
     public enum LoadingState{
         Loading,
@@ -52,10 +52,14 @@ public class Model {
 
     public LiveData<User> getLoggedUser(){
 
-        String email=firebaseModel.getLoggedUserEmail();
+        String username=firebaseModel.getLoggedUserUsername();
+        if (username!=null){
+            this.username=username;
+        }
+
 
         if (user==null){
-            user=localDb.userDao().getUserByEmail(email);
+            user=localDb.userDao().getUserByUsername(this.username);
             refreshAllUsers();
 
         }
@@ -64,7 +68,8 @@ public class Model {
 
     }
     private LiveData<List<Post>> postList;
-    public LiveData<List<Post>> getAllPosts(String username) {
+    public LiveData<List<Post>> getAllPosts() {
+        String username= firebaseModel.getLoggedUserUsername();
         if(postList == null){
 
             postList = localDb.postDao().getAllWithoutUser(username);
@@ -150,31 +155,31 @@ public class Model {
 
 
     }
-    public void getUserPosts(String username,Listener<List<Post>> listener){
-        refreshAllPosts();
-            executor.execute(()->{
-                List<Post> data=localDb.postDao().getUserPosts(username);
-                mainHandler.post(()->listener.onComplete(data));
-            });
+    LiveData<List<Post>> userPosts;
+    public LiveData<List<Post>> getUserPosts(String username){
+        userPosts=localDb.postDao().getUserPosts(username);
+        return userPosts;
+
 
 
     }
 
     public void addPost(Post post,Listener<Void> listener){
         firebaseModel.addPost(post,listener);
+
     }
-    public void getPostById(String id,Listener<Post> listener) {
-        refreshAllPosts();
-            executor.execute(()->{
-                Post post=localDb.postDao().getPostById(id);
-                mainHandler.post(()->{listener.onComplete(post);});
-            });
+    LiveData<Post> post;
+    public LiveData<Post> getPostById(String id) {
+
+
+        post=localDb.postDao().getPostById(id);
+
+        return post;
 
 
     }
     public void getFavoritesPosts(List<String> favorites,Listener<List<Post>> listener){
-        refreshAllUsers();
-        refreshAllPosts();
+
 
                 executor.execute(()->{
                     List<Post> data=localDb.postDao().getFavorites(favorites);
@@ -260,10 +265,7 @@ public class Model {
     public void register(User newUser,String password,Listener<Void> listener){
         listener.onComplete(null);
         firebaseModel.register(newUser,password);
-//        executor.execute(()->{
-//            localDb.userDao().insert(newUser);
-//
-//        });
+
         refreshAllUsers();
 
 
@@ -281,8 +283,11 @@ public class Model {
     public void logIn(String username, String password, Listener<Boolean> listener) {
         firebaseModel.logIn(username,password,listener);
     }
-    public void getOtherUser(String username,Listener<User> listener) {
-        firebaseModel.getUserByUsername(username,listener);
+    LiveData<User> otherUser;
+    public LiveData<User>  getOtherUser(String username) {
+        otherUser=localDb.userDao().getUserByUsername(username);
+        return otherUser;
+
     }
 
     public boolean isUserLoggedIn() {

@@ -17,9 +17,9 @@ public interface PostDao {
     LiveData<List<Post>> getAllWithoutUser(String username);
 
     @Query("select * from Post where owner=:username")
-    List<Post> getUserPosts(String username);
+    LiveData<List<Post>> getUserPosts(String username);
     @Query("select * from Post where id=:id")
-    Post getPostById(String id);
+    LiveData<Post> getPostById(String id);
     @Query("select * from Post where id in (:postIds)")
     List<Post> getFavorites(List<String> postIds);
     @RawQuery

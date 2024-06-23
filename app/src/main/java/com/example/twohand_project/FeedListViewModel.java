@@ -10,9 +10,10 @@ import java.util.List;
 
 public class FeedListViewModel extends ViewModel {
     private LiveData<List<Post>> list;
-    public LiveData<List<Post>> getList(String username){
+    public LiveData<List<Post>> getList(){
+
         if (list==null){
-            list= Model.instance().getAllPosts(username);
+            list= Model.instance().getAllPosts();
         }
 
         return list;

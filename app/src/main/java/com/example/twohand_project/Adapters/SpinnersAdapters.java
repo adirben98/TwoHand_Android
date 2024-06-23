@@ -13,7 +13,7 @@ public class SpinnersAdapters {
     public static ArrayAdapter<String> setClothKindsSpinner(Context context){
         List<String> clothesKind=Model.instance().getAllClothesKinds();
         ArrayAdapter<String> clothKindSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,clothesKind);
-        clothKindSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        clothKindSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         return  clothKindSpinnerAdapter;
     };
     public static ArrayAdapter<String> setColorsSpinner( Context context){

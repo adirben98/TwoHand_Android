@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -54,7 +55,13 @@ class ViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(User user,Post post,OnItemClickListener onPhotoClickListener,OnItemClickListener onUsernameClickListener,Context context) {
         this.owner.setText(post.owner);
-        Picasso.get().load(post.ownerImg).into(this.ownerImg);
+        if (Objects.equals(post.ownerImg, "")) {
+            this.ownerImg.setImageResource(R.drawable.avatar);
+        }
+        else{
+            Picasso.get().load(post.ownerImg).into(this.ownerImg);
+
+        }
         this.description.setText(post.description);
         this.location.setText(post.location);
         this.price.setText(post.price+"$");
@@ -62,6 +69,10 @@ class ViewHolder extends RecyclerView.ViewHolder{
         Picasso.get().load(post.postImg).into(this.postImg);
         if(!post.sold){
             this.sold.setVisibility(View.GONE);
+        }
+        else{
+            this.sold.setVisibility(View.VISIBLE);
+
         }
         this.number=post.number;
         if (user.favorites.contains(post.id)){
@@ -158,5 +169,9 @@ public class ListAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void setData(List<Post> newData) {
         this.data=newData;
         notifyDataSetChanged();
+    }
+
+    public void setUser(User user) {
+        this.user=user;
     }
 }

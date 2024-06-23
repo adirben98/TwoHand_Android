@@ -50,11 +50,13 @@ public class OtherUserProfileFragment extends Fragment {
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new GridLayoutManager(getContext(), 3));
         String otherUsername=OtherUserProfileFragmentArgs.fromBundle(getArguments()).getUsername();
-        adapter=new ProfileListAdapter(viewModel.getData(), getLayoutInflater());
 
-            Model.instance().getOtherUser(otherUsername, otherUser-> {
-                user = otherUser;
-                setProfile();
+            Model.instance().getOtherUser(otherUsername).observe(getViewLifecycleOwner(), otherUser-> {
+                if (otherUser != null) {
+                    user = otherUser;
+                    setProfile();
+                }
+
             });
         return view;
     }
@@ -63,20 +65,29 @@ public class OtherUserProfileFragment extends Fragment {
         binding.usernameTextView.setText(user.username);
         binding.locationTextView.setText(user.location);
         binding.numberTv.setText(user.number);
-        Picasso.get().load(user.userImg).into(binding.avatarImageView);
+        if (Objects.equals(user.userImg, "")) {
+            binding.avatarImageView.setImageResource(R.drawable.avatar);
+        }
+        else{
+            Picasso.get().load(user.userImg).into(binding.avatarImageView);
 
-        adapter.SetItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onClick(int pos) {
-                OtherUserProfileFragmentDirections.ActionOtherUserProfileFragmentToPostFragment action = OtherUserProfileFragmentDirections.actionOtherUserProfileFragmentToPostFragment(viewModel.getData().get(pos).id);
-                Navigation.findNavController(view).navigate(action);
-            }
-        });
-        binding.recyclerList.setAdapter(adapter);
+        }
 
-        Model.instance().getUserPosts(user.username, (posts) -> {
-            viewModel.setData(posts);
-            adapter.setData(posts);
+
+        viewModel.getData(user.username).observe(getViewLifecycleOwner(), (posts) -> {
+            adapter=new ProfileListAdapter(posts, getLayoutInflater());
+            binding.recyclerList.setAdapter(adapter);
+
+            adapter.SetItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onClick(int pos) {
+                    OtherUserProfileFragmentDirections.ActionOtherUserProfileFragmentToPostFragment action = OtherUserProfileFragmentDirections.actionOtherUserProfileFragmentToPostFragment(posts.get(pos).id);
+                    Navigation.findNavController(view).navigate(action);
+                }
+            });
+
+
+
         });
 
 
