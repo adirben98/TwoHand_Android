@@ -49,6 +49,7 @@ public class PostFragment extends Fragment {
 
         Model.instance().getPostById(id).observe(getViewLifecycleOwner(), (post) -> {
             binding.Username.setText(post.owner);
+            binding.Location.setText(post.location);
             Picasso.get().load(post.postImg).into(binding.postImage);
             if (Objects.equals(post.ownerImg, "")) {
                 binding.userImage.setImageResource(R.drawable.avatar);
