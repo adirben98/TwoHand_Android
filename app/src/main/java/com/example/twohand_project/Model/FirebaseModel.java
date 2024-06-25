@@ -197,7 +197,7 @@ public class FirebaseModel {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    listener.onComplete(task.getResult().getDocuments().size()>0);
+                    listener.onComplete(!task.getResult().getDocuments().isEmpty());
                 }
             }
         });
