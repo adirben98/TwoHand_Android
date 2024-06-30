@@ -97,11 +97,11 @@ public class CategoryFragment extends Fragment {
             binding.location.setAdapter(adapter);
         });
 
-        binding.searchBtn.setOnClickListener(new View.OnClickListener() {
+        binding.search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
-//                                    viewModel.setData(data);
+                                   viewModel.setData(data);
                     adapter.setData(data);
                 });
             }

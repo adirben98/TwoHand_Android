@@ -128,8 +128,9 @@ public class Model {
     }
     public void getPostsByCategory(String kind,String color,String location,Listener<List<Post>> listener){
         refreshAllPosts();
+
             executor.execute(()->{
-                StringBuilder queryBuilder = new StringBuilder("SELECT * FROM Post WHERE 1=1");
+                StringBuilder queryBuilder = new StringBuilder("SELECT * FROM Post WHERE 1=1 ");
 
                 List<Object> args = new ArrayList<>();
 
@@ -147,6 +148,8 @@ public class Model {
                     queryBuilder.append(" AND location = ?");
                     args.add(location);
                 }
+                queryBuilder.append(" AND owner != ?");
+                args.add(username);
 
                 SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
                 List<Post> data= localDb.postDao().getPostsByQuery(query);
