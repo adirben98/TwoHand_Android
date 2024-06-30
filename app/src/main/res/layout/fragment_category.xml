@@ -30,8 +30,8 @@
 
     <ImageButton
         android:id="@+id/search_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="80dp"
         android:layout_marginTop="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"

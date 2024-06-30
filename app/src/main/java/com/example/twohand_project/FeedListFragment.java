@@ -60,14 +60,16 @@ public class FeedListFragment extends Fragment {
 
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
+
         userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
             if (user!=null){
+                adapter = new ListAdapter(user,viewModel.getList().getValue(), getLayoutInflater(),getContext());
+                binding.recyclerList.setAdapter(adapter);
+
 
 
                 viewModel.getList().observe(getViewLifecycleOwner(),list->{
-                    adapter = new ListAdapter(user,list, getLayoutInflater(),getContext());
-                    binding.recyclerList.setAdapter(adapter);
-
+                adapter.setData(list);
 
                     adapter.SetOnPhotoClickListener(pos -> {
                         Post post=list.get(pos);

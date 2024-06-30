@@ -297,6 +297,7 @@ public class Model {
     public void logout() {
         firebaseModel.logOut();
         user=null;
+        postList=null;
     }
 
 

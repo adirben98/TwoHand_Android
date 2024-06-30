@@ -49,6 +49,7 @@ public class CategoryFragment extends Fragment {
     CategoryViewModel viewModel;
     UserViewModel userViewModel;
     FragmentCategoryBinding binding;
+    ListAdapter adapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -95,6 +96,16 @@ public class CategoryFragment extends Fragment {
         SpinnersAdapters.setLocationSpinner(null,getContext(),(adapter)->{
             binding.location.setAdapter(adapter);
         });
+
+        binding.searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
+//                                    viewModel.setData(data);
+                    adapter.setData(data);
+                });
+            }
+        });
         binding.location.setAdapter(SpinnersAdapters.fakeAdapter(getContext()));
         binding.clothKind.setAdapter(SpinnersAdapters.setClothKindsSpinner(getContext()));
         binding.colorSpinner.setAdapter( SpinnersAdapters.setColorsSpinner(getContext()));
@@ -115,18 +126,10 @@ public class CategoryFragment extends Fragment {
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
         userViewModel.getUser().observe(getViewLifecycleOwner(),(user)->{
-            ListAdapter adapter = new ListAdapter(user,viewModel.getData(), getLayoutInflater(),getContext());
+            adapter = new ListAdapter(user,viewModel.getData(), getLayoutInflater(),getContext());
             list.setAdapter(adapter);
 
-            binding.searchBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
-                                    viewModel.setData(data);
-                                    adapter.setData(data);
-                                });
-                        }
-                    });
+
         });
         return view;
     }

@@ -53,7 +53,6 @@ public class ProfileFragment extends Fragment {
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-
         userViewModel.getUser().observe(getViewLifecycleOwner(),newUser->{
             if (newUser!=null) {
                 user = newUser;
