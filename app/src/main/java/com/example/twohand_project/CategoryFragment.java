@@ -101,7 +101,7 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Model.instance().getPostsByCategory(clothKind,color,location,(data)->{
-                                   viewModel.setData(data);
+                    viewModel.setData(data);
                     adapter.setData(data);
                 });
             }
