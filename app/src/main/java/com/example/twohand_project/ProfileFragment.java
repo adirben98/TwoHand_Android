@@ -83,8 +83,6 @@ public class ProfileFragment extends Fragment {
                     Navigation.findNavController(view).navigate(action);
                 }
             });
-
-
         });
 
             binding.editButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_profileFragment_to_editProfileFragment));

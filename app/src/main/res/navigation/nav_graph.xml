@@ -74,7 +74,14 @@
         android:id="@+id/favoritesFragment"
         android:name="com.example.twohand_project.FavoritesFragment"
         android:label=""
-        tools:layout="@layout/fragment_favorites"/>
+        tools:layout="@layout/fragment_favorites">
+        <action
+            android:id="@+id/action_favoritesFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_otherUserProfileFragment"
+            app:destination="@id/otherUserProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.twohand_project.EditProfileFragment"

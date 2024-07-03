@@ -100,6 +100,7 @@
                 android:layout_width="315dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="25dp"
+                android:inputType="textPassword"
                 android:hint="Password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

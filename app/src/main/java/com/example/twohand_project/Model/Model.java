@@ -162,33 +162,25 @@ public class Model {
     public LiveData<List<Post>> getUserPosts(String username){
         userPosts=localDb.postDao().getUserPosts(username);
         return userPosts;
-
-
-
     }
 
     public void addPost(Post post,Listener<Void> listener){
         firebaseModel.addPost(post,listener);
 
     }
+
     LiveData<Post> post;
     public LiveData<Post> getPostById(String id) {
-
-
         post=localDb.postDao().getPostById(id);
-
         return post;
-
-
     }
-    public void getFavoritesPosts(List<String> favorites,Listener<List<Post>> listener){
 
+    public void getFavoritesPosts(List<String> favorites,Listener<List<Post>> listener){
 
                 executor.execute(()->{
                     List<Post> data=localDb.postDao().getFavorites(favorites);
                     mainHandler.post(()->{listener.onComplete(data);});
                 });
-
 
     }
 
@@ -221,6 +213,7 @@ public class Model {
         colors.add("Other");
         return colors;
     }
+
     public void getLocations(Listener<List<String>> listener) {
         List<String> data=new ArrayList<>();
         data.add("Location");

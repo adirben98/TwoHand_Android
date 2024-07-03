@@ -114,12 +114,15 @@ public class User {
         String location=(String)data.get("location");
         String number=(String) data.get("number");
         List<String> favorites=(List<String>) data.get("favorites");
+
         User user=new User(username,email,userImg,location,number,favorites);
+
         Timestamp ts=(Timestamp)data.get("lastUpdated");
         assert ts != null;
         user.setLastUpdated(ts.getSeconds());
         return user;
     }
+
     public static Map<String, Object> toJson(User user){
         Map<String, Object> json=new HashMap<>();
         json.put("username",user.username);
@@ -129,9 +132,6 @@ public class User {
         json.put("number",user.number);
         json.put("favorites",user.favorites);
         json.put("lastUpdated", FieldValue.serverTimestamp());
-
-
         return json;
-
     }
 }

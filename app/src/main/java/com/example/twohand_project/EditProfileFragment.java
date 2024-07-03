@@ -113,11 +113,13 @@ public class EditProfileFragment extends Fragment {
                     String number=binding.numberEt.getText().toString();
 
                     if (number.matches("\\d+")) {
+
                         if (photoSelected) {
                             binding.avatar.setDrawingCacheEnabled(true);
                             binding.avatar.buildDrawingCache();
                             Bitmap bitmap = ((BitmapDrawable) binding.avatar.getDrawable()).getBitmap();
                             String id = UUID.randomUUID().toString();
+
                             Model.instance().uploadImage(id, bitmap, (url) -> {
                                 User updatedUser = new User(user.username, user.email, url, location, binding.numberEt.getText().toString(), user.favorites);
                                 updateUserAndHisPosts(v, updatedUser);

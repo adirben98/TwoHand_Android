@@ -45,6 +45,7 @@ public class FeedListFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(FeedListViewModel.class);
         binding=FragmentFeedListBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
+
         Model.instance().EventFeedLoadingState.observe(getViewLifecycleOwner(),status->{
             binding.SwipeRefresh.setRefreshing(status == Model.LoadingState.Loading);
 

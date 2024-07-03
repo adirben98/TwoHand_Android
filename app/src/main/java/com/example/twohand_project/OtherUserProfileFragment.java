@@ -26,8 +26,6 @@ import java.util.Objects;
 
 public class OtherUserProfileFragment extends Fragment {
 
-
-
     FragmentOtherUserProfileBinding binding;
     User user;
     OtherProfileViewModel viewModel;
